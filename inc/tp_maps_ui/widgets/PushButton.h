@@ -4,6 +4,11 @@
 #include "tp_maps_ui/Widget.h"
 #include "tp_utils/CallbackCollection.h"
 
+namespace tp_maps
+{
+struct TextureData;
+}
+
 namespace tp_maps_ui
 {
 
@@ -25,6 +30,9 @@ public:
 
   //################################################################################################
   void setText(const std::u16string& text);
+
+  //################################################################################################
+  void setImage(const tp_maps::TextureData& normalImage, const tp_maps::TextureData& pressedImage);
 
   //################################################################################################
   tp_utils::CallbackCollection<void()> clicked;

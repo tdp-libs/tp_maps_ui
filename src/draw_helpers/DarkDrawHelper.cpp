@@ -15,6 +15,21 @@ ThemeParameters DarkDrawHelper::params()
 {
   ThemeParameters params;
 
+  //A panel
+  {
+    params.normalPanelFrame.l = {186,189,182,255};
+    params.normalPanelFrame.r = {120,120,120,255};
+    params.normalPanelFrame.t = {186,189,182,255};
+    params.normalPanelFrame.b = {120,120,120,255};
+
+    params.normalPanelFrame.c = {146,148,143,255};
+
+    params.normalPanelFrame.tl = {192,192,192,255};
+    params.normalPanelFrame.tr = {136,138,133,255};
+    params.normalPanelFrame.bl = {136,138,133,255};
+    params.normalPanelFrame.br = {120,120,120,255};
+  }
+
   //A normal raised button
   {
     params.raisedButtonFrame.l = {186,189,182,255};

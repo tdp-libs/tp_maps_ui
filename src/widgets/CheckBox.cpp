@@ -125,13 +125,14 @@ void CheckBox::render(tp_maps::RenderInfo& renderInfo)
 {
   TP_UNUSED(renderInfo);
 
+  if(!drawHelper())
+    return;
+
   auto m = matrix();
 
   //Draw the checkbox.
-  if(d->checkState==CheckState::Checked && drawHelper())
-  {
-    drawHelper()->drawBox(m, width(), height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
-  }
+  auto visualModifier = (d->checkState==CheckState::Checked)?VisualModifier::Checked:VisualModifier::Unchecked;
+  drawHelper()->drawBox(m, width(), height(), BoxType::Raised, FillType::CheckBox, visualModifier);
 
   //Draw the text.
   if(font())
@@ -150,9 +151,11 @@ void CheckBox::render(tp_maps::RenderInfo& renderInfo)
     if(!d->preparedString)
       return;
 
+    auto color = drawHelper()->textColor(BoxType::Raised, FillType::CheckBox, visualModifier);
+
     shader->use();
     shader->setMatrix(glm::translate(m, {width()/2.0f, height()/1.55f, 0.0f}));
-
+    shader->setColor(color);
     shader->drawPreparedString(*d->preparedString.get());
   }
 }

@@ -5,6 +5,10 @@
 #include "tp_maps/Map.h"
 #include "tp_maps/MouseEvent.h"
 #include "tp_maps/shaders/FontShader.h"
+#include "tp_maps/shaders/ImageShader.h"
+#include "tp_maps/textures/BasicTexture.h"
+
+#include "tp_utils/DebugUtils.h"
 
 #include "glm/gtx/transform.hpp"
 
@@ -19,10 +23,23 @@ struct PushButton::Private
   std::u16string text;
   std::unique_ptr<tp_maps::FontShader::PreparedString> preparedString;
 
+  tp_maps::TextureData normalImage;
+  tp_maps::TextureData pressedImage;
+  std::unique_ptr<tp_maps::BasicTexture> normalImageTexture;
+  std::unique_ptr<tp_maps::BasicTexture> pressedImageTexture;
+
+  tp_maps::ImageShader::VertexBuffer* normalImageVertexBuffer{nullptr};
+  tp_maps::ImageShader::VertexBuffer* pressedImageVertexBuffer{nullptr};
+
   //This represents the button state, normal, hover, presses, etc...
   VisualModifier currentVisualModifier{VisualModifier::Normal};
 
+  GLuint normalImageTextureID{0};
+  GLuint pressedImageTextureID{0};
+
   bool regenerateText{true};
+  bool bindBeforeRender{false};
+  bool updateVertexBuffer{true};
 };
 
 //##################################################################################################
@@ -61,6 +78,18 @@ void PushButton::setText(const std::u16string& text)
   update();
 }
 
+//################################################################################################
+void PushButton::setImage(const tp_maps::TextureData& normalImage, const tp_maps::TextureData& pressedImage)
+{
+  d->normalImage.destroy();
+  d->pressedImage.destroy();
+
+  d->normalImage  = normalImage.clone2();
+  d->pressedImage = pressedImage.clone2();
+
+  d->bindBeforeRender = true;
+}
+
 //##################################################################################################
 void PushButton::render(tp_maps::RenderInfo& renderInfo)
 {
@@ -75,7 +104,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
   }
 
   //Draw the text.
-  if(font())
+  if(font() && !d->text.empty())
   {
     auto shader = layer()->map()->getShader<tp_maps::FontShader>();
     if(shader->error())
@@ -91,16 +120,122 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
     if(!d->preparedString)
       return;
 
+    auto color = drawHelper()->textColor(BoxType::Raised, FillType::Button, d->currentVisualModifier);
+
     shader->use();
     shader->setMatrix(glm::translate(m, {width()/2.0f, height()/1.55f, 0.0f}));
-
+    shader->setColor(color);
     shader->drawPreparedString(*d->preparedString.get());
+  }
+
+  //Draw image
+  {
+    if(d->bindBeforeRender)
+    {
+      d->bindBeforeRender=false;
+      d->updateVertexBuffer=true;
+
+      {
+        layer()->map()->deleteTexture(d->normalImageTextureID);
+        d->normalImageTextureID = 0;
+
+        if(d->normalImage.data)
+        {
+          if(!d->normalImageTexture)
+            d->normalImageTexture.reset(new tp_maps::BasicTexture(layer()->map()));
+          d->normalImageTexture->setImage(d->normalImage);
+
+          if(d->normalImageTexture->imageReady())
+            d->normalImageTextureID = d->normalImageTexture->bindTexture();
+        }
+      }
+
+      {
+        layer()->map()->deleteTexture(d->pressedImageTextureID);
+        d->pressedImageTextureID = 0;
+
+        if(d->pressedImage.data)
+        {
+          if(!d->pressedImageTexture)
+            d->pressedImageTexture.reset(new tp_maps::BasicTexture(layer()->map()));
+          d->pressedImageTexture->setImage(d->pressedImage);
+
+          if(d->pressedImageTexture->imageReady())
+            d->pressedImageTextureID = d->pressedImageTexture->bindTexture();
+        }
+      }
+    }
+
+    if(d->normalImageTextureID>0 || d->pressedImageTextureID>0)
+    {
+      tp_maps::ImageShader* shader = layer()->map()->getShader<tp_maps::ImageShader>();
+      if(shader->error())
+        return;
+
+      if(d->updateVertexBuffer)
+      {
+        d->updateVertexBuffer=false;
+
+        float w = 1.0f;
+        float h = 1.0f;
+        float x = 0.0f;
+        float y = 0.0f;
+
+        if(d->normalImageTextureID>0)
+        {
+          glm::vec2 t = d->normalImageTexture->textureDims();
+
+          std::vector<tp_maps::ImageShader::Vertex> verts;
+          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0}, {0,0,1}, {0.0f, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0}, {0,0,1}, {0.0f,  t.y}));
+          std::vector<GLushort> indexes{0,1,2,3};
+
+          delete d->normalImageVertexBuffer;
+          d->normalImageVertexBuffer = shader->generateVertexBuffer(layer()->map(), indexes, verts);
+        }
+
+        if(d->pressedImageTextureID>0)
+        {
+          glm::vec2 t = d->pressedImageTexture->textureDims();
+
+          std::vector<tp_maps::ImageShader::Vertex> verts;
+          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0}, {0,0,1}, {0.0f, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0}, {0,0,1}, {0.0f,  t.y}));
+          std::vector<GLushort> indexes{3,2,1,0};
+
+          delete d->pressedImageVertexBuffer;
+          d->pressedImageVertexBuffer = shader->generateVertexBuffer(layer()->map(), indexes, verts);
+        }
+      }
+
+      shader->use();
+      shader->setMatrix(glm::scale(m,{width(), height(), 1.0f}));
+      if(d->normalImageTextureID>0 && d->normalImageVertexBuffer)
+      {
+        shader->setTexture(d->normalImageTextureID);
+        shader->drawImage(GL_TRIANGLE_FAN, d->normalImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
+      }
+
+      if(d->pressedImageTextureID>0 && d->pressedImageVertexBuffer)
+      {
+        shader->setTexture(d->pressedImageTextureID);
+        shader->drawImage(GL_TRIANGLE_FAN, d->pressedImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
+      }
+    }
   }
 }
 
 //##################################################################################################
 void PushButton::invalidateBuffers()
 {
+  d->bindBeforeRender=true;
+  d->normalImageTextureID=0;
+  d->pressedImageTextureID=0;
+
   Widget::invalidateBuffers();
 }
 

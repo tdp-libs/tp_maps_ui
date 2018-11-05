@@ -3,6 +3,8 @@
 
 #include "tp_maps_ui/Globals.h"
 
+#include "tp_maps/textures/BasicTexture.h"
+
 #include "glm/glm.hpp"
 
 namespace tp_maps
@@ -29,6 +31,8 @@ enum class BoxType
 enum class FillType
 {
   Button,   //!< A raised or depressed button.
+  CheckBox, //!< Style of check boxes.
+  Radio,    //!< Style of radio buttons.
   Editable, //!< An editable panel like a text box or spin box.
   Panel,    //!< A raised floading panel.
   Float     //!< For example the white panel that appears below a combo box, or a tooltip.
@@ -40,7 +44,10 @@ enum class VisualModifier
   Normal,
   Focus,
   Pressed,
-  Disabled
+  Disabled,
+  Partial,
+  Checked,
+  Unchecked
 };
 
 //##################################################################################################
@@ -75,6 +82,9 @@ public:
   //################################################################################################
   //! Draw a semi-transparent overlay to obscure out the background.
   virtual void drawOverlay(const glm::mat4& matrix, float width, float height, float fade) = 0;
+
+  //################################################################################################
+  virtual glm::vec4 textColor(BoxType boxType, FillType fillType, VisualModifier visualModifier) = 0;
 
   //################################################################################################
   const BoxParams& boxParams(BoxType boxType) const;

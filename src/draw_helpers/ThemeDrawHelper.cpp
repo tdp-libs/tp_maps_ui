@@ -20,6 +20,7 @@ struct FrameDetails_lt
   std::vector<tp_maps::FrameShader::Vertex> verts;
   tp_maps::FrameShader::VertexBuffer* vertexBuffer{nullptr};
   bool updateVertexBuffer{true};
+  glm::vec4 textColor;
 };
 
 //##################################################################################################
@@ -127,8 +128,11 @@ struct ThemeDrawHelper::Private
 
   ThemeParameters themeParameters;
 
+  FrameDetails_lt normalPanelFrameDetails;
   FrameDetails_lt raisedButtonFrameDetails;
   FrameDetails_lt sunkenButtonFrameDetails;
+  FrameDetails_lt checkedCheckBoxFrameDetails;
+  FrameDetails_lt uncheckedCheckBoxFrameDetails;
 
   FrameDetails_lt overlayFrameDetails;
 
@@ -163,11 +167,20 @@ struct ThemeDrawHelper::Private
   //################################################################################################
   void deleteVertexBuffers()
   {
+    delete normalPanelFrameDetails.vertexBuffer;
+    normalPanelFrameDetails.vertexBuffer=nullptr;
+
     delete raisedButtonFrameDetails.vertexBuffer;
     raisedButtonFrameDetails.vertexBuffer=nullptr;
 
     delete sunkenButtonFrameDetails.vertexBuffer;
     sunkenButtonFrameDetails.vertexBuffer=nullptr;
+
+    delete checkedCheckBoxFrameDetails.vertexBuffer;
+    checkedCheckBoxFrameDetails.vertexBuffer=nullptr;
+
+    delete uncheckedCheckBoxFrameDetails.vertexBuffer;
+    uncheckedCheckBoxFrameDetails.vertexBuffer=nullptr;
 
     delete overlayFrameDetails.vertexBuffer;
     overlayFrameDetails.vertexBuffer=nullptr;
@@ -189,6 +202,11 @@ struct ThemeDrawHelper::Private
   //################################################################################################
   static void generateFrame(TextureBuffer_lt& textureBuffer, FrameDetails_lt& frame, const FrameParameters& colors)
   {
+    frame.textColor.x = float(colors.textColor.r)/255.0f;
+    frame.textColor.y = float(colors.textColor.g)/255.0f;
+    frame.textColor.z = float(colors.textColor.b)/255.0f;
+    frame.textColor.w = float(colors.textColor.a)/255.0f;
+
     size_t borderSize = 1;
     size_t centerSize = 1;
 
@@ -280,14 +298,12 @@ struct ThemeDrawHelper::Private
   }
 
   //################################################################################################
-  static void generateOverlay(TextureBuffer_lt& textureBuffer, FrameDetails_lt& frame)
+  static void generateOverlay(TextureBuffer_lt& textureBuffer, FrameDetails_lt& frame, const OverlayParameters& params)
   {
-    tp_maps::Pixel cellColor{0, 0, 255, 255};
-
     size_t cellSize = 1;
 
 
-    auto t = textureBuffer.drawCell(cellSize, cellSize, [&](float, float){return cellColor;});
+    auto t = textureBuffer.drawCell(cellSize, cellSize, [&](float, float){return params.color;});
 
     frame.verts.clear();
     frame.indexes.clear();
@@ -324,11 +340,13 @@ struct ThemeDrawHelper::Private
 
     TextureBuffer_lt textureBuffer(textureData);
 
-    //We will need to make the texture offsets more sane here
-    generateFrame(textureBuffer, raisedButtonFrameDetails, themeParameters.raisedButtonFrame);
-    generateFrame(textureBuffer, sunkenButtonFrameDetails, themeParameters.sunkenButtonFrame);
+    generateFrame(textureBuffer,       normalPanelFrameDetails, themeParameters.normalPanelFrame      );
+    generateFrame(textureBuffer,      raisedButtonFrameDetails, themeParameters.raisedButtonFrame     );
+    generateFrame(textureBuffer,      sunkenButtonFrameDetails, themeParameters.sunkenButtonFrame     );
+    generateFrame(textureBuffer,   checkedCheckBoxFrameDetails, themeParameters.checkedCheckBoxFrame  );
+    generateFrame(textureBuffer, uncheckedCheckBoxFrameDetails, themeParameters.uncheckedCheckBoxFrame);
 
-    generateOverlay(textureBuffer, overlayFrameDetails);
+    generateOverlay(textureBuffer, overlayFrameDetails, themeParameters.overlay);
 
     texture->setImage(textureData);
   }
@@ -369,6 +387,43 @@ struct ThemeDrawHelper::Private
 
     shader->drawImage(GL_TRIANGLES, frame.vertexBuffer, color);
   }
+
+
+  //##################################################################################################
+  FrameDetails_lt& selectFrameDetails(BoxType boxType, FillType fillType, VisualModifier visualModifier)
+  {
+    TP_UNUSED(boxType);
+
+    switch(fillType)
+    {
+    case FillType::Panel:
+    {
+      return normalPanelFrameDetails;
+    }
+    case FillType::CheckBox:
+    {
+      switch(visualModifier)
+      {
+      case VisualModifier::Checked:
+        return checkedCheckBoxFrameDetails;
+
+      default:
+        return uncheckedCheckBoxFrameDetails;
+      }
+    }
+    default:
+    {
+      switch(visualModifier)
+      {
+      case VisualModifier::Pressed:
+        return sunkenButtonFrameDetails;
+
+      default:
+        return raisedButtonFrameDetails;
+      }
+    }
+    }
+  }
 };
 
 //##################################################################################################
@@ -394,20 +449,7 @@ const ThemeParameters& ThemeDrawHelper::themeParameters() const
 //##################################################################################################
 void ThemeDrawHelper::drawBox(const glm::mat4& matrix, float width, float height, BoxType boxType, FillType fillType, VisualModifier visualModifier)
 {
-  TP_UNUSED(boxType);
-  TP_UNUSED(fillType);
-  TP_UNUSED(visualModifier);
-
-  switch(visualModifier)
-  {
-  case VisualModifier::Pressed:
-    d->drawFrame(matrix, d->sunkenButtonFrameDetails, width, height);
-    break;
-
-  default:
-    d->drawFrame(matrix, d->raisedButtonFrameDetails, width, height);
-    break;
-  }
+  d->drawFrame(matrix, d->selectFrameDetails(boxType, fillType, visualModifier), width, height);
 }
 
 //##################################################################################################
@@ -415,6 +457,12 @@ void ThemeDrawHelper::drawOverlay(const glm::mat4& matrix, float width, float he
 {
   TP_UNUSED(fade);
   d->drawFrame(matrix, d->overlayFrameDetails, width, height);
+}
+
+//##################################################################################################
+glm::vec4 ThemeDrawHelper::textColor(BoxType boxType, FillType fillType, VisualModifier visualModifier)
+{
+  return d->selectFrameDetails(boxType, fillType, visualModifier).textColor;
 }
 
 //##################################################################################################
