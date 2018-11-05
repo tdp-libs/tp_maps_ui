@@ -33,12 +33,6 @@ struct CheckBox::Private
   {
 
   }
-
-  //################################################################################################
-  void updateUI()
-  {
-
-  }
 };
 
 //##################################################################################################
@@ -87,7 +81,7 @@ bool CheckBox::checked() const
 void CheckBox::setChecked(bool checked)
 {
   d->checkState = checked?CheckState::Checked:CheckState::Unchecked;
-  d->updateUI();
+  update();
 }
 
 //##################################################################################################
@@ -104,7 +98,7 @@ void CheckBox::setCheckstate(CheckState checkState)
   if(!d->tristate && d->checkState==CheckState::PartiallyChecked)
     d->checkState = CheckState::Unchecked;
 
-  d->updateUI();
+  update();
 }
 
 //##################################################################################################
@@ -117,7 +111,7 @@ bool CheckBox::tristate() const
 void CheckBox::setTristate(bool tristate)
 {
   d->tristate = tristate;
-  d->updateUI();
+  update();
 }
 
 //##################################################################################################
