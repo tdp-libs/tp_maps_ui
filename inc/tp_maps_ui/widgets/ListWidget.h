@@ -11,10 +11,27 @@ class TP_MAPS_UI_SHARED_EXPORT ListWidget : public Widget
 {
 public:
   //################################################################################################
-  ListWidget(Widget* parent=nullptr);
+  ListWidget(Orientation orientation, Widget* parent=nullptr);
 
   //################################################################################################
   ~ListWidget() override;
+
+  //################################################################################################
+  void dataChanged();
+
+  //################################################################################################
+  template<typename T>
+  void setDelegate(T* delegate)
+  {
+    setNumberOfRowsCallback([=](){return delegate->numberOfRows();});
+    setWidgetForRowCallback([=](size_t row, Widget* existing){return delegate->widgetForRow(row, existing);});
+  }
+
+  //################################################################################################
+  void setNumberOfRowsCallback(const std::function<size_t()>& numberOfRows);
+
+  //################################################################################################
+  void setWidgetForRowCallback(const std::function<Widget*(size_t, Widget*)>& widgetForRow);
 
 protected:
   //################################################################################################

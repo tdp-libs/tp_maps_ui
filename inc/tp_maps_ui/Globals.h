@@ -15,14 +15,14 @@ namespace tp_maps_ui
 {
 
 //##################################################################################################
-enum class Orientation
+enum class Orientation : size_t
 {
   Horizontal,
   Vertical
 };
 
 //##################################################################################################
-enum class HAlignment
+enum class HAlignment : size_t
 {
   Left,
   Center,
@@ -30,7 +30,7 @@ enum class HAlignment
 };
 
 //##################################################################################################
-enum class VAlignment
+enum class VAlignment : size_t
 {
   Top,
   Center,
@@ -38,7 +38,7 @@ enum class VAlignment
 };
 
 //##################################################################################################
-enum class CheckState
+enum class CheckState : size_t
 {
   Unchecked,
   PartiallyChecked,
