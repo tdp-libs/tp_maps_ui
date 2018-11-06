@@ -18,6 +18,7 @@ struct Label::Private
 {
   std::u16string text;
   std::unique_ptr<tp_maps::FontShader::PreparedString> preparedString;
+  HAlignment hAlignment{HAlignment::Left};
   bool regenerateText{true};
 
   //################################################################################################
@@ -65,6 +66,14 @@ void Label::setText(const std::u16string& text)
 }
 
 //##################################################################################################
+void Label::setHAlignment(HAlignment hAlignment)
+{
+  d->hAlignment = hAlignment;
+  d->regenerateText = true;
+  update();
+}
+
+//##################################################################################################
 void Label::render(tp_maps::RenderInfo& renderInfo)
 {
   TP_UNUSED(renderInfo);
@@ -85,6 +94,14 @@ void Label::render(tp_maps::RenderInfo& renderInfo)
     {
       tp_maps::PreparedStringConfig config;
       config.topDown = true;
+
+      switch(d->hAlignment)
+      {
+      case HAlignment::Left:   config.relativeOffset.x =  1.0f; break;
+      case HAlignment::Center: config.relativeOffset.x =  0.0f; break;
+      case HAlignment::Right:  config.relativeOffset.x = -1.0f; break;
+      };
+
       d->preparedString.reset(new tp_maps::FontShader::PreparedString(shader, font(), d->text, config));
     }
 
@@ -94,7 +111,16 @@ void Label::render(tp_maps::RenderInfo& renderInfo)
     auto color = drawHelper()->textColor(BoxType::Raised, FillType::Panel, VisualModifier::Normal);
 
     shader->use();
-    shader->setMatrix(glm::translate(m, {width()/2.0f, height()/1.55f, 0.0f}));
+
+    float xTrans=0.0f;
+    switch(d->hAlignment)
+    {
+    case HAlignment::Left:   xTrans = 0.0f;         break;
+    case HAlignment::Center: xTrans = width()/2.0f; break;
+    case HAlignment::Right:  xTrans = width();      break;
+    };
+
+    shader->setMatrix(glm::translate(m, {xTrans, height()/1.55f, 0.0f}));
     shader->setColor(color);
     shader->drawPreparedString(*d->preparedString.get());
   }
