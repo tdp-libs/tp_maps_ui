@@ -105,7 +105,11 @@ struct TextureBuffer_lt
         textureData.data[(x+w)+(textureData.w*(y+yy))] = textureData.data[((x+w)-1)+(textureData.w*(y+yy))];
       }
 
-#warning add the corners
+      textureData.data[(x-1)+(textureData.w*(y-1))] = textureData.data[x+(textureData.w*y)];
+      textureData.data[(x+w)+(textureData.w*(y-1))] = textureData.data[((x+w)-1)+(textureData.w*y)];
+
+      textureData.data[(x-1)+(textureData.w*(y+h))] = textureData.data[x+(textureData.w*((y+h)-1))];
+      textureData.data[(x+w)+(textureData.w*(y+h))] = textureData.data[((x+w)-1)+(textureData.w*((y+h)-1))];
     }
 
     //-- Calculate the texture coords --------------------------------------------------------------
