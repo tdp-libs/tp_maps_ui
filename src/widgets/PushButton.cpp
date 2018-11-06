@@ -8,8 +8,6 @@
 #include "tp_maps/shaders/ImageShader.h"
 #include "tp_maps/textures/BasicTexture.h"
 
-#include "tp_utils/DebugUtils.h"
-
 #include "glm/gtx/transform.hpp"
 
 #include <memory>
@@ -186,11 +184,11 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           glm::vec2 t = d->normalImageTexture->textureDims();
 
           std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0}, {0,0,1}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0}, {0,0,1}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0}, {0,0,1}, {0.0f, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0}, {0,0,1}, {0.0f,  t.y}));
-          std::vector<GLushort> indexes{0,1,2,3};
+          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f,  t.y}));
+          std::vector<GLushort> indexes{3,2,1,0};
 
           delete d->normalImageVertexBuffer;
           d->normalImageVertexBuffer = shader->generateVertexBuffer(layer()->map(), indexes, verts);
@@ -201,10 +199,10 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           glm::vec2 t = d->pressedImageTexture->textureDims();
 
           std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0}, {0,0,1}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0}, {0,0,1}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0}, {0,0,1}, {0.0f, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0}, {0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f,  t.y}));
           std::vector<GLushort> indexes{3,2,1,0};
 
           delete d->pressedImageVertexBuffer;
@@ -214,16 +212,22 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
 
       shader->use();
       shader->setMatrix(glm::scale(m,{width(), height(), 1.0f}));
-      if(d->normalImageTextureID>0 && d->normalImageVertexBuffer)
-      {
-        shader->setTexture(d->normalImageTextureID);
-        shader->drawImage(GL_TRIANGLE_FAN, d->normalImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
-      }
 
-      if(d->pressedImageTextureID>0 && d->pressedImageVertexBuffer)
+      if(d->currentVisualModifier == VisualModifier::Pressed)
       {
-        shader->setTexture(d->pressedImageTextureID);
-        shader->drawImage(GL_TRIANGLE_FAN, d->pressedImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
+        if(d->pressedImageTextureID>0 && d->pressedImageVertexBuffer)
+        {
+          shader->setTexture(d->pressedImageTextureID);
+          shader->drawImage(GL_TRIANGLE_FAN, d->pressedImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
+        }
+      }
+      else
+      {
+        if(d->normalImageTextureID>0 && d->normalImageVertexBuffer)
+        {
+          shader->setTexture(d->normalImageTextureID);
+          shader->drawImage(GL_TRIANGLE_FAN, d->normalImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
+        }
       }
     }
   }
