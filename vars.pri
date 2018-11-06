@@ -63,6 +63,9 @@ HEADERS += inc/tp_maps_ui/widgets/TabPanel.h
 SOURCES += src/widgets/TabWidget.cpp
 HEADERS += inc/tp_maps_ui/widgets/TabWidget.h
 
+SOURCES += src/widgets/FPSLabel.cpp
+HEADERS += inc/tp_maps_ui/widgets/FPSLabel.h
+
 
 #-- Draw Helpers -----------------------------------------------------------------------------------
 SOURCES += src/draw_helpers/DarkDrawHelper.cpp
