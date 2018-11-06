@@ -96,6 +96,7 @@ void ListWidget::dataChanged()
 {
   for(auto& item : d->items)
     item.update = true;
+  d->updateVisibility = true;
   update();
 }
 
