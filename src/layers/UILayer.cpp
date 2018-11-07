@@ -30,6 +30,8 @@ UILayer::UILayer():
   d->rootWidget->setLayer(this);
   d->rootWidget->setTransparentToMouseEvents(true);
   d->drawHelper = new DarkDrawHelper(this);
+
+  setDefaultRenderPass(tp_maps::RenderPass::GUI);
 }
 
 //##################################################################################################
@@ -72,7 +74,7 @@ DrawHelper* UILayer::drawHelper() const
 //##################################################################################################
 void UILayer::render(tp_maps::RenderInfo& renderInfo)
 {
-  if(renderInfo.pass != tp_maps::RenderPass::GUIRenderPass)
+  if(renderInfo.pass != defaultRenderPass())
     return;
 
   if(d->width != map()->width() || d->height != map()->height())
