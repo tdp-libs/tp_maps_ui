@@ -3,7 +3,7 @@ TEMPLATE = lib
 
 DEFINES += TP_MAPS_UI_WIDGET_LIBRARY
 
-#SOURCES += src/Globals.cpp
+SOURCES += src/Globals.cpp
 HEADERS += inc/tp_maps_ui/Globals.h
 
 SOURCES += src/Layout.cpp

@@ -1,19 +1,42 @@
-#ifndef tdp_maps_widget_global_h
-#define tdp_maps_widget_global_h
+#include "tp_maps_ui/Globals.h"
 
-#include "tp_utils/StringID.h"
+#include <cmath>
 
-#if defined(TDP_MAPS_WIDGET_LIBRARY)
-#  define TDP_MAPS_WIDGET_SHARED_EXPORT TP_EXPORT
-#else
-#  define TDP_MAPS_WIDGET_SHARED_EXPORT TP_IMPORT
-#endif
-
-//##################################################################################################
-//! A simple 3D engine for widget based applications.
-namespace tdp_maps_widget
+namespace tp_maps_ui
 {
 
+//##################################################################################################
+bool calculateAnimationValue(float targetValue, float& currentValue, float speed)
+{
+  if(currentValue>targetValue)
+  {
+    currentValue -= speed;
+    if(currentValue<targetValue)
+      currentValue=targetValue;
+  }
+  else
+  {
+    currentValue += speed;
+    if(currentValue>targetValue)
+      currentValue=targetValue;
+  }
+
+  if(std::fabs(targetValue - currentValue)<0.000001f)
+  {
+    currentValue = targetValue;
+    return false;
+  }
+
+  return true;
 }
 
-#endif
+//##################################################################################################
+bool calculateAnimationDim(const Dim& target, Dim& dim, float speedR, float speedP)
+{
+  bool cont=false;
+  cont |= tp_maps_ui::calculateAnimationValue(target.sizeFraction, dim.sizeFraction, speedR);
+  cont |= tp_maps_ui::calculateAnimationValue(target.sizePixels, dim.sizePixels, speedP);
+  return cont;
+}
+
+}

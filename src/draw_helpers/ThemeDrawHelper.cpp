@@ -356,7 +356,7 @@ struct ThemeDrawHelper::Private
   }
 
   //################################################################################################
-  void drawFrame(const glm::mat4& matrix, FrameDetails_lt& frame, float width, float height)
+  void drawFrame(const glm::mat4& matrix, FrameDetails_lt& frame, float width, float height, const glm::vec4& color)
   {
     populateGeometry();
 
@@ -453,14 +453,15 @@ const ThemeParameters& ThemeDrawHelper::themeParameters() const
 //##################################################################################################
 void ThemeDrawHelper::drawBox(const glm::mat4& matrix, float width, float height, BoxType boxType, FillType fillType, VisualModifier visualModifier)
 {
-  d->drawFrame(matrix, d->selectFrameDetails(boxType, fillType, visualModifier), width, height);
+  d->drawFrame(matrix, d->selectFrameDetails(boxType, fillType, visualModifier), width, height, d->color);
 }
 
 //##################################################################################################
 void ThemeDrawHelper::drawOverlay(const glm::mat4& matrix, float width, float height, float fade)
 {
-  TP_UNUSED(fade);
-  d->drawFrame(matrix, d->overlayFrameDetails, width, height);
+  auto c = d->color;
+  c.a = fade;
+  d->drawFrame(matrix, d->overlayFrameDetails, width, height, c);
 }
 
 //##################################################################################################

@@ -81,6 +81,12 @@ struct Dim
   }
 };
 
+//##################################################################################################
+bool calculateAnimationValue(float targetValue, float& currentValue, float speed);
+
+//##################################################################################################
+bool calculateAnimationDim(const tp_maps_ui::Dim& target, tp_maps_ui::Dim& dim, float speedR, float speedP);
+
 }
 
 #endif

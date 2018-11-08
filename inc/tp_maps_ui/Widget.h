@@ -55,7 +55,7 @@ public:
   Layout* layout() const;
 
   //################################################################################################
-  void setGeometry(float x, float y, float w, float h);
+  virtual void setGeometry(float x, float y, float w, float h);
 
   //################################################################################################
   float x() const;

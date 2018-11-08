@@ -119,4 +119,45 @@ void FixedLayout::getWidgetDims(Widget* widget, Dim& x, Dim& y, Dim& width, Dim&
   height = params->height;
 }
 
+//##################################################################################################
+std::function<bool(double)> FixedLayout::makeAnimationFunctor(tp_maps_ui::Widget* widget,
+                                                              tp_maps_ui::Dim targetX,
+                                                              tp_maps_ui::Dim targetY,
+                                                              tp_maps_ui::Dim targetWidth,
+                                                              tp_maps_ui::Dim targetHeight,
+                                                              float speedR,
+                                                              float speedP)
+{
+  return [=, lastTimeMS=-1.0](double timeMS) mutable -> bool
+  {
+    auto delta = timeMS-lastTimeMS;
+    if(lastTimeMS<0.0)
+    {
+      lastTimeMS = timeMS;
+      return true;
+    }
+
+    if(delta<0.5)
+      return false;
+
+    auto sR = speedR * (float(delta)/1000.0f); //Speed for relative coords
+    auto sP = speedP * (float(delta)/1000.0f); //Speed for pixel coords
+
+    if(sR<0.000000000001f || sP<0.0000001f)
+      return false;
+
+    tp_maps_ui::Dim x;
+    tp_maps_ui::Dim y;
+    tp_maps_ui::Dim width;
+    tp_maps_ui::Dim height;
+    getWidgetDims(widget, x, y, width, height);
+    bool cont=false;
+    cont |= tp_maps_ui::calculateAnimationDim(targetX, x, sR, sP);
+    cont |= tp_maps_ui::calculateAnimationDim(targetY, y, sR, sP);
+    cont |= tp_maps_ui::calculateAnimationDim(targetWidth, width, sR, sP);
+    cont |= tp_maps_ui::calculateAnimationDim(targetHeight, height, sR, sP);
+    updateWidgetDims(widget, x, y, width, height);
+    return cont;
+  };
+}
 }

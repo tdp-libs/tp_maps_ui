@@ -20,6 +20,7 @@ struct Overlay::Private
 {
   //This represents the button state, normal, hover, presses, etc...
   VisualModifier currentVisualModifier{VisualModifier::Normal};
+  float fade{1.0f};
 };
 
 //##################################################################################################
@@ -37,6 +38,48 @@ Overlay::~Overlay()
 }
 
 //##################################################################################################
+void Overlay::setFade(float fade)
+{
+  d->fade = fade;
+  update();
+}
+
+//##################################################################################################
+float Overlay::fade() const
+{
+  return d->fade;
+}
+
+//##################################################################################################
+void Overlay::fadeAnimation(float fadeTo, float speed)
+{
+  setVisible(true);
+  setCurrentAnimation([&, lastTimeMS=-1.0, fadeTo, speed](double timeMS) mutable -> bool
+  {
+    auto delta = timeMS-lastTimeMS;
+    if(lastTimeMS<0.0)
+    {
+      lastTimeMS = timeMS;
+      return true;
+    }
+
+    if(delta<0.5)
+      return false;
+
+    auto s = speed * (float(delta)/1000.0f);
+
+    if(s<0.000001f)
+      return false;
+
+    float f = fade();
+    auto cont = calculateAnimationValue(fadeTo, f, s);
+    setFade(f);
+    setVisible(cont || (fadeTo>0.01f));
+    return cont;
+  });
+}
+
+//##################################################################################################
 void Overlay::render(tp_maps::RenderInfo& renderInfo)
 {
   TP_UNUSED(renderInfo);
@@ -46,7 +89,7 @@ void Overlay::render(tp_maps::RenderInfo& renderInfo)
 
   auto m = matrix();
 
-  drawHelper()->drawOverlay(m, width(), height(), 1.0f);
+  drawHelper()->drawOverlay(m, width(), height(), d->fade);
 }
 
 //##################################################################################################

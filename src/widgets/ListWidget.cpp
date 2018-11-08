@@ -92,6 +92,13 @@ ListWidget::~ListWidget()
 }
 
 //##################################################################################################
+void ListWidget::setGeometry(float x, float y, float w, float h)
+{
+  Widget::setGeometry(x, y, w, h);
+  dataChanged();
+}
+
+//##################################################################################################
 void ListWidget::dataChanged()
 {
   for(auto& item : d->items)

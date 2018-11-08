@@ -31,6 +31,15 @@ public:
   //################################################################################################
   void getWidgetDims(Widget* widget, Dim& x, Dim& y, Dim& width, Dim& height);
 
+  //################################################################################################
+  std::function<bool(double)> makeAnimationFunctor(tp_maps_ui::Widget* widget,
+                                                   tp_maps_ui::Dim targetX,
+                                                   tp_maps_ui::Dim targetY,
+                                                   tp_maps_ui::Dim targetWidth,
+                                                   tp_maps_ui::Dim targetHeight,
+                                                   float speedR,
+                                                   float speedP);
+
 private:
   struct Private;
   Private* d;
