@@ -123,6 +123,17 @@ public:
   virtual std::pair<Dim, Dim> sizeHint() const;
 
   //################################################################################################
+  //! Sets a functor that will be called to update an animation.
+  /*!
+  This will replace an existing animation with a new animation or if the functor is null it will
+  stop an existing animation. The functor should return true if the animation is not yet complete,
+  returning false will end the animation.
+
+  \param animation The animation functor.
+  */
+  void setCurrentAnimation(const std::function<bool(double)>& animation);
+
+  //################################################################################################
   //! Used by layout classes to store information about widgets that they layout
   template<typename T, typename... Args>
   T* layoutParams(Args&&... args)

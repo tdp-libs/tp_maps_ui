@@ -25,6 +25,12 @@ public:
   //################################################################################################
   void addLayout(Layout* layout, Dim x=Dim::zero(), Dim y=Dim::zero(), Dim width=Dim::full(), Dim height=Dim::full());
 
+  //################################################################################################
+  void updateWidgetDims(Widget* widget, Dim x=Dim::zero(), Dim y=Dim::zero(), Dim width=Dim::full(), Dim height=Dim::full());
+
+  //################################################################################################
+  void getWidgetDims(Widget* widget, Dim& x, Dim& y, Dim& width, Dim& height);
+
 private:
   struct Private;
   Private* d;

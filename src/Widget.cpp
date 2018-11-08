@@ -22,6 +22,8 @@ struct Widget::Private
   DrawHelper* drawHelper{nullptr};
   LayoutParams* layoutParams{nullptr};
 
+  std::function<bool(double)> animation;
+
   std::vector<Widget*> children;
 
   glm::mat4 matrix{1.0f};
@@ -316,6 +318,12 @@ std::pair<Dim, Dim> Widget::sizeHint() const
 }
 
 //##################################################################################################
+void Widget::setCurrentAnimation(const std::function<bool(double)>& animation)
+{
+  d->animation = animation;
+}
+
+//##################################################################################################
 LayoutParams* Widget::layoutParams()
 {
   return d->layoutParams;
@@ -412,6 +420,10 @@ void Widget::animateInternal(double timestampMS)
     return;
 
   d->updateGeometry();
+
+  if(d->animation)
+    if(!d->animation(timestampMS))
+      d->animation = std::function<bool(double)>();
 
   animate(timestampMS);
   for(auto child : d->children)

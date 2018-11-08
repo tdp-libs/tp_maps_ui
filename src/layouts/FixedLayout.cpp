@@ -1,5 +1,8 @@
 #include "tp_maps_ui/layouts/FixedLayout.h"
+#include "tp_maps_ui/layers/UILayer.h"
 #include "tp_maps_ui/Widget.h"
+
+#include "tp_maps/Map.h"
 
 #include "tp_utils/DebugUtils.h"
 
@@ -74,7 +77,7 @@ void FixedLayout::updateLayout()
   }
 }
 
-//################################################################################################
+//##################################################################################################
 void FixedLayout::addWidget(Widget* widget, Dim x, Dim y, Dim width, Dim height)
 {
   if(!parent())
@@ -87,12 +90,33 @@ void FixedLayout::addWidget(Widget* widget, Dim x, Dim y, Dim width, Dim height)
   parent()->addWidget(widget);
 }
 
-//################################################################################################
+//##################################################################################################
 void FixedLayout::addLayout(Layout* layout, Dim x, Dim y, Dim width, Dim height)
 {
   auto widget = new Widget();
   widget->setLayout(layout);
   addWidget(widget, x, y, width, height);
+}
+
+//##################################################################################################
+void FixedLayout::updateWidgetDims(Widget* widget, Dim x, Dim y, Dim width, Dim height)
+{
+  auto dims = widget->layoutParams<LayoutParams_lt>(x, y, width, height);
+  dims->x = x;
+  dims->y = y;
+  dims->width = width;
+  dims->height = height;
+  updateLayout();
+}
+
+//##################################################################################################
+void FixedLayout::getWidgetDims(Widget* widget, Dim& x, Dim& y, Dim& width, Dim& height)
+{
+  auto params = widget->layoutParams<LayoutParams_lt>();
+  x = params->x;
+  y = params->y;
+  width = params->width;
+  height = params->height;
 }
 
 }
