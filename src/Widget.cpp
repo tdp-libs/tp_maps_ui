@@ -2,6 +2,7 @@
 #include "tp_maps_ui/Layout.h"
 #include "tp_maps_ui/layers/UILayer.h"
 
+#include "tp_maps/Map.h"
 #include "tp_maps/RenderInfo.h"
 #include "tp_maps/MouseEvent.h"
 
@@ -37,6 +38,11 @@ struct Widget::Private
   float screenY     {1.0f};
   float screenWidth {1.0f};
   float screenHeight{1.0f};
+
+  GLint scissorX{1};
+  GLint scissorY{1};
+  GLint scissorW{1};
+  GLint scissorH{1};
 
   bool visible{true};
   bool transparentToMouseEvents{false};
@@ -87,6 +93,43 @@ struct Widget::Private
         screenY = y;
         screenWidth  = width;
         screenHeight = height;
+      }
+
+      scissorX = GLint(std::lround(screenX));
+      scissorY = GLint(layer->map()->height()) - (GLint(std::lround(screenY+screenHeight)));
+      scissorW = GLint(std::lround(screenWidth));
+      scissorH = GLint(std::lround(screenHeight));
+
+      if(parent)
+      {
+        GLint parentScissorX = parent->d->scissorX;
+        GLint parentScissorY = parent->d->scissorY;
+        GLint parentScissorW = parent->d->scissorW;
+        GLint parentScissorH = parent->d->scissorH;
+
+        if(scissorX<parentScissorX)
+        {
+          scissorW = tpMax(0, scissorW-(parentScissorX-scissorX));
+          scissorX=parentScissorX;
+        }
+
+        if(scissorY<parentScissorY)
+        {
+          scissorH = tpMax(0, scissorH-(parentScissorY-scissorY));
+          scissorY=parentScissorY;
+        }
+
+        auto projScissorW = scissorW + scissorX;
+        auto projScissorH = scissorH + scissorY;
+
+        auto projParentScissorW = parentScissorW + parentScissorX;
+        auto projParentScissorH = parentScissorH + parentScissorY;
+
+        if(projScissorW>projParentScissorW)
+          scissorW = tpMax(0, scissorW-(projScissorW-projParentScissorW));
+
+        if(projScissorH>projParentScissorH)
+          scissorH = tpMax(0, scissorH-(projScissorH-projParentScissorH));
       }
     }
   }
@@ -375,8 +418,9 @@ void Widget::renderInternal(tp_maps::RenderInfo& renderInfo)
     return;
 
   d->updateGeometry();
-
+  glScissor(d->scissorX, d->scissorY, d->scissorW, d->scissorH);
   render(renderInfo);
+
   for(auto child : d->children)
     child->renderInternal(renderInfo);
 }

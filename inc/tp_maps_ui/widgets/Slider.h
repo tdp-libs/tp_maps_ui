@@ -1,61 +1,66 @@
-#ifndef tp_maps_ui_BoxLayout_h
-#define tp_maps_ui_BoxLayout_h
+#ifndef tp_maps_ui_Slider_h
+#define tp_maps_ui_Slider_h
 
-#include "tp_maps_ui/Layout.h"
+#include "tp_maps_ui/Widget.h"
+#include "tp_utils/CallbackCollection.h"
+
+namespace tp_maps
+{
+struct TextureData;
+}
 
 namespace tp_maps_ui
 {
 
 //##################################################################################################
-class TP_MAPS_UI_SHARED_EXPORT BoxLayout : public Layout
+class TP_MAPS_UI_SHARED_EXPORT Slider : public Widget
 {
 public:
   //################################################################################################
-  BoxLayout(Orientation orientation, Widget* parent=nullptr);
+  Slider(Widget* parent=nullptr);
 
   //################################################################################################
-  ~BoxLayout() override;
-
-  //################################################################################################
-  void updateLayout() override;
-
-  //################################################################################################
-  void addWidget(Widget* widget, const Dim& fraction=Dim::full(), float stretch=0.0f);
-
-  //################################################################################################
-  void addLayout(Layout* layout, const Dim& fraction=Dim::full(), float stretch=0.0f);
-
-  //################################################################################################
-  void addStretch(float stretch=1.0f);
-
-  //################################################################################################
-  void addSpacing(const Dim& spacing);
+  ~Slider() override;
 
   //################################################################################################
   std::pair<Dim, Dim> sizeHint() const override;
+
+  //################################################################################################
+  void setRange(int64_t min, int64_t max);
+
+  //################################################################################################
+  void setValue(int64_t value);
+
+  //################################################################################################
+  int64_t min() const;
+
+  //################################################################################################
+  int64_t max() const;
+
+  //################################################################################################
+  int64_t value() const;
+
+  //################################################################################################
+  tp_utils::CallbackCollection<void()> valueChanged;
+
+protected:
+  //################################################################################################
+  void render(tp_maps::RenderInfo& renderInfo) override;
+
+  //################################################################################################
+  void invalidateBuffers() override;
+
+  //################################################################################################
+  bool mouseEvent(const tp_maps::MouseEvent& event) override;
+
+  //################################################################################################
+  void animate(double timestampMS) override;
 
 private:
   struct Private;
   Private* d;
   friend struct Private;
 };
-
-//##################################################################################################
-class TP_MAPS_UI_SHARED_EXPORT VBoxLayout : public BoxLayout
-{
-public:
-  //################################################################################################
-  VBoxLayout(Widget* parent=nullptr);
-};
-
-//##################################################################################################
-class TP_MAPS_UI_SHARED_EXPORT HBoxLayout : public BoxLayout
-{
-public:
-  //################################################################################################
-  HBoxLayout(Widget* parent=nullptr);
-};
-
 }
 #endif
 

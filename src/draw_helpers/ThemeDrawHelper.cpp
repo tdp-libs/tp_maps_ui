@@ -214,6 +214,8 @@ struct ThemeDrawHelper::Private
     size_t borderSize = 1;
     size_t centerSize = 1;
 
+    float borderSizeF = float(borderSize);
+
     size_t   leftColumnW = borderSize;
     size_t centerColumnW = centerSize;
     size_t  rightColumnW = borderSize;
@@ -266,13 +268,13 @@ struct ThemeDrawHelper::Private
     };
 
     float px0 = 0.0f;
-    float px1 = borderSize;
-    float px2 = -float(borderSize);
+    float px1 = borderSizeF;
+    float px2 = -borderSizeF;
     float px3 = 0.0f;
 
     float py0 = 0.0f;
-    float py1 = borderSize;
-    float py2 = -float(borderSize);
+    float py1 = borderSizeF;
+    float py2 = -borderSizeF;
     float py3 = 0.0f;
 
     float rx0 = 0.0f;

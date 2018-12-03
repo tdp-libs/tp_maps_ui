@@ -130,14 +130,32 @@ void BoxLayout::updateLayout()
   float w = parent()->width();
   float h = parent()->height();
 
+  auto marginTop    = contentsMargins().top.calc(h);
+  auto marginBottom = contentsMargins().bottom.calc(h);
+
+  auto marginLeft  = contentsMargins().left.calc(w);
+  auto marginRight = contentsMargins().right.calc(w);
+
+  auto hh = tpMax(h-(marginTop+marginBottom), 1.0f);
+  auto ww = tpMax(w-(marginLeft+marginRight), 1.0f);
+
+
   if(d->orientation == Orientation::Vertical)
   {
-    for(auto sizeDetails : calculateSizes(children, h, []( Widget* c){return SizeDetails_lt(c->sizeHint().second);}))
+    for(auto sizeDetails : calculateSizes(children, hh, []( Widget* c){return SizeDetails_lt(c->sizeHint().second);}))
     {
       auto params = sizeDetails.params;
-      float ww = params->fraction.calc(w);
-      float origin = (params->hAlignment==HAlignment::Left)?0.0f:((params->hAlignment==HAlignment::Center)?((w-ww)/2.0f):(w-ww));
-      sizeDetails.child->setGeometry(origin, sizeDetails.origin, ww, sizeDetails.size);
+      float www = params->fraction.calc(ww);
+
+      float origin = 0.0f;
+      if(params->hAlignment==HAlignment::Left)
+        origin = marginLeft;
+      else if(params->hAlignment==HAlignment::Center)
+        origin = marginLeft+((ww-www)/2.0f);
+      else
+        origin = (ww-www)-marginRight;
+
+      sizeDetails.child->setGeometry(origin, marginTop+sizeDetails.origin, www, sizeDetails.size);
     }
   }
   else
@@ -145,9 +163,17 @@ void BoxLayout::updateLayout()
     for(auto sizeDetails : calculateSizes(children, h, [](Widget* c){return SizeDetails_lt(c->sizeHint().first);}))
     {
       auto params = sizeDetails.params;
-      float hh = params->fraction.calc(h);
-      float origin = (params->vAlignment==VAlignment::Top)?0.0f:((params->vAlignment==VAlignment::Center)?((h-hh)/2.0f):(h-hh));
-      sizeDetails.child->setGeometry(sizeDetails.origin, origin, sizeDetails.size, hh);
+      float hhh = params->fraction.calc(hh);
+
+      float origin = 0.0f;
+      if(params->vAlignment==VAlignment::Top)
+        origin = marginTop;
+      else if(params->vAlignment==VAlignment::Center)
+        origin = marginTop+((hh-hhh)/2.0f);
+      else
+        origin = (hh-hhh)-marginBottom;
+
+      sizeDetails.child->setGeometry(marginLeft+sizeDetails.origin, origin, sizeDetails.size, hhh);
     }
   }
 }
@@ -185,6 +211,37 @@ void BoxLayout::addSpacing(const Dim& spacing)
 {
   auto widget = new Spacing(spacing);
   addWidget(widget);
+}
+
+//##################################################################################################
+std::pair<Dim, Dim> BoxLayout::sizeHint() const
+{
+  const auto& m = contentsMargins();
+  Dim h = Dim::pixels(m.left.calc(parent()->width())  + m.right .calc(parent()->width()) );
+  Dim v = Dim::pixels(m.top .calc(parent()->height()) + m.bottom.calc(parent()->height()));
+
+  if(d->orientation == Orientation::Vertical)
+  {
+    h = Dim::full();
+    for(auto child : parent()->children())
+    {
+      const auto s = child->sizeHint();
+      v.sizePixels   += s.second.sizePixels;
+      v.sizeFraction += s.second.sizeFraction;
+    }
+  }
+  else
+  {
+    v = Dim::full();
+    for(auto child : parent()->children())
+    {
+      const auto s = child->sizeHint();
+      h.sizePixels   += s.first.sizePixels;
+      h.sizeFraction += s.first.sizeFraction;
+    }
+  }
+
+  return {h, v};
 }
 
 //##################################################################################################

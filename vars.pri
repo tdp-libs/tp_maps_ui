@@ -28,6 +28,9 @@ HEADERS += inc/tp_maps_ui/layouts/BoxLayout.h
 SOURCES += src/layouts/FixedLayout.cpp
 HEADERS += inc/tp_maps_ui/layouts/FixedLayout.h
 
+SOURCES += src/layouts/SubWindowLayout.cpp
+HEADERS += inc/tp_maps_ui/layouts/SubWindowLayout.h
+
 
 #-- Widgets ----------------------------------------------------------------------------------------
 SOURCES += src/widgets/Frame.cpp
@@ -65,6 +68,12 @@ HEADERS += inc/tp_maps_ui/widgets/TabWidget.h
 
 SOURCES += src/widgets/FPSLabel.cpp
 HEADERS += inc/tp_maps_ui/widgets/FPSLabel.h
+
+SOURCES += src/widgets/Slider.cpp
+HEADERS += inc/tp_maps_ui/widgets/Slider.h
+
+SOURCES += src/widgets/CollapsiblePanel.cpp
+HEADERS += inc/tp_maps_ui/widgets/CollapsiblePanel.h
 
 
 #-- Draw Helpers -----------------------------------------------------------------------------------

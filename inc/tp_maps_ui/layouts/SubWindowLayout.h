@@ -1,47 +1,39 @@
-#ifndef tp_maps_ui_Layout_h
-#define tp_maps_ui_Layout_h
+#ifndef tp_maps_ui_SubWindowLayout_h
+#define tp_maps_ui_SubWindowLayout_h
 
-#include "tp_maps_ui/Globals.h"
+#include "tp_maps_ui/Layout.h"
 
 namespace tp_maps_ui
 {
-class Widget;
 
 //##################################################################################################
-class TP_MAPS_UI_SHARED_EXPORT Layout
+class TP_MAPS_UI_SHARED_EXPORT SubWindowLayout : public Layout
 {
-  friend class Widget;
 public:
   //################################################################################################
-  Layout(Widget* parent=nullptr);
+  SubWindowLayout(Widget* parent=nullptr);
 
   //################################################################################################
-  virtual ~Layout();
+  ~SubWindowLayout() override;
 
   //################################################################################################
-  Widget* parent() const;
+  void updateLayout() override;
 
   //################################################################################################
-  virtual std::pair<Dim, Dim> sizeHint() const;
+  void addWidget(Widget* widget);
 
   //################################################################################################
-  void setContentsMargins(const Dim& left, const Dim& top, const Dim& right, const Dim& bottom);
+  void addLayout(Layout* layout);
 
   //################################################################################################
-  const Margins& contentsMargins() const;
-
-  //################################################################################################
-  virtual void updateLayout() = 0;
-
-private:
-  //################################################################################################
-  void setParent(Widget* parent);
+  std::pair<Dim, Dim> sizeHint() const override;
 
 private:
   struct Private;
   Private* d;
   friend struct Private;
 };
+
 }
 #endif
 

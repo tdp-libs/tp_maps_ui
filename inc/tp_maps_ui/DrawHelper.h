@@ -39,7 +39,7 @@ enum class FillType
 };
 
 //##################################################################################################
-enum class VisualModifier
+enum class VisualModifier : size_t
 {
   Normal,
   Focus,
