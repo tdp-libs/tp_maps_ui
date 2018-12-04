@@ -417,8 +417,10 @@ void Widget::renderInternal(tp_maps::RenderInfo& renderInfo)
   if(!d->visible)
     return;
 
+  auto s = GLint(layer()->map()->pixelScale());
+
   d->updateGeometry();
-  glScissor(d->scissorX, d->scissorY, d->scissorW, d->scissorH);
+  glScissor(d->scissorX*s, d->scissorY*s, d->scissorW*s, d->scissorH*s);
   render(renderInfo);
 
   for(auto child : d->children)
