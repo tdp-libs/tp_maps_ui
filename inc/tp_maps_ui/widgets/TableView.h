@@ -1,5 +1,5 @@
-#ifndef tp_maps_ui_ListWidget_h
-#define tp_maps_ui_ListWidget_h
+#ifndef tp_maps_ui_TableView_h
+#define tp_maps_ui_TableView_h
 
 #include "tp_maps_ui/Widget.h"
 
@@ -7,14 +7,14 @@ namespace tp_maps_ui
 {
 
 //##################################################################################################
-class TP_MAPS_UI_SHARED_EXPORT ListWidget : public Widget
+class TP_MAPS_UI_SHARED_EXPORT TableView : public Widget
 {
 public:
   //################################################################################################
-  ListWidget(Orientation orientation, Widget* parent=nullptr);
+  TableView(Orientation orientation, Widget* parent=nullptr);
 
   //################################################################################################
-  ~ListWidget() override;
+  ~TableView() override;
 
   //################################################################################################
   void setGeometry(float x, float y, float w, float h) override;

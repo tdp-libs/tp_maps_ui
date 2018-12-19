@@ -1,4 +1,4 @@
-#include "tp_maps_ui/widgets/ListWidget.h"
+#include "tp_maps_ui/widgets/TableView.h"
 
 namespace tp_maps_ui
 {
@@ -14,9 +14,9 @@ struct ItemDetails_lt
 }
 
 //##################################################################################################
-struct ListWidget::Private
+struct TableView::Private
 {
-  ListWidget* q;
+  TableView* q;
 
   std::function<size_t()> numberOfRows;
   std::function<Widget*(size_t, Widget*)> widgetForRow;
@@ -37,7 +37,7 @@ struct ListWidget::Private
 
 
   //################################################################################################
-  Private(ListWidget* q_, Orientation orientation_):
+  Private(TableView* q_, Orientation orientation_):
     q(q_),
     orientation(orientation_)
   {
@@ -78,7 +78,7 @@ struct ListWidget::Private
 };
 
 //##################################################################################################
-ListWidget::ListWidget(Orientation orientation, Widget* parent):
+TableView::TableView(Orientation orientation, Widget* parent):
     Widget(parent),
     d(new Private(this, orientation))
 {
@@ -86,20 +86,20 @@ ListWidget::ListWidget(Orientation orientation, Widget* parent):
 }
 
 //##################################################################################################
-ListWidget::~ListWidget()
+TableView::~TableView()
 {
   delete d;
 }
 
 //##################################################################################################
-void ListWidget::setGeometry(float x, float y, float w, float h)
+void TableView::setGeometry(float x, float y, float w, float h)
 {
   Widget::setGeometry(x, y, w, h);
   dataChanged();
 }
 
 //##################################################################################################
-void ListWidget::dataChanged()
+void TableView::dataChanged()
 {
   for(auto& item : d->items)
     item.update = true;
@@ -108,7 +108,7 @@ void ListWidget::dataChanged()
 }
 
 //##################################################################################################
-void ListWidget::setNumberOfRowsCallback(const std::function<size_t()>& numberOfRows)
+void TableView::setNumberOfRowsCallback(const std::function<size_t()>& numberOfRows)
 {
   d->numberOfRows = numberOfRows;
   d->updateVisibility = true;
@@ -116,7 +116,7 @@ void ListWidget::setNumberOfRowsCallback(const std::function<size_t()>& numberOf
 }
 
 //##################################################################################################
-void ListWidget::setWidgetForRowCallback(const std::function<Widget*(size_t, Widget*)>& widgetForRow)
+void TableView::setWidgetForRowCallback(const std::function<Widget*(size_t, Widget*)>& widgetForRow)
 {
   d->widgetForRow = widgetForRow;
   d->updateVisibility = true;
@@ -124,7 +124,7 @@ void ListWidget::setWidgetForRowCallback(const std::function<Widget*(size_t, Wid
 }
 
 //##################################################################################################
-void ListWidget::render(tp_maps::RenderInfo& renderInfo)
+void TableView::render(tp_maps::RenderInfo& renderInfo)
 {
   Widget::render(renderInfo);
 
@@ -165,19 +165,19 @@ void ListWidget::render(tp_maps::RenderInfo& renderInfo)
 }
 
 //##################################################################################################
-void ListWidget::invalidateBuffers()
+void TableView::invalidateBuffers()
 {
   Widget::invalidateBuffers();
 }
 
 //##################################################################################################
-bool ListWidget::mouseEvent(const tp_maps::MouseEvent& event)
+bool TableView::mouseEvent(const tp_maps::MouseEvent& event)
 {
   return Widget::mouseEvent(event);
 }
 
 //##################################################################################################
-void ListWidget::animate(double timestampMS)
+void TableView::animate(double timestampMS)
 {
   Widget::animate(timestampMS);
 }

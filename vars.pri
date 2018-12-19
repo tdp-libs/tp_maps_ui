@@ -45,8 +45,8 @@ HEADERS += inc/tp_maps_ui/widgets/CheckBox.h
 SOURCES += src/widgets/LineEdit.cpp
 HEADERS += inc/tp_maps_ui/widgets/LineEdit.h
 
-SOURCES += src/widgets/ListWidget.cpp
-HEADERS += inc/tp_maps_ui/widgets/ListWidget.h
+SOURCES += src/widgets/TableView.cpp
+HEADERS += inc/tp_maps_ui/widgets/TableView.h
 
 SOURCES += src/widgets/PushButton.cpp
 HEADERS += inc/tp_maps_ui/widgets/PushButton.h
