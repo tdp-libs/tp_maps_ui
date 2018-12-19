@@ -4,6 +4,8 @@
 
 #include "tp_maps/Map.h"
 #include "tp_maps/MouseEvent.h"
+#include "tp_maps/Font.h"
+#include "tp_maps/FontRenderer.h"
 #include "tp_maps/shaders/FontShader.h"
 
 #include "glm/gtx/transform.hpp"
@@ -112,6 +114,17 @@ void CheckBox::setTristate(bool tristate)
 {
   d->tristate = tristate;
   update();
+}
+
+//################################################################################################
+std::pair<Dim, Dim> CheckBox::sizeHint() const
+{
+  auto f = font()?font()->font():nullptr;
+
+  if(!f)
+    return Widget::sizeHint();
+
+  return {{0.0f, 1.0f}, {f->lineHeight()+8.0f, 0.0f}};
 }
 
 //##################################################################################################

@@ -45,6 +45,9 @@ public:
   void setTristate(bool tristate);
 
   //################################################################################################
+  std::pair<Dim, Dim> sizeHint() const override;
+
+  //################################################################################################
   tp_utils::CallbackCollection<void(CheckState)> checkStateChanged;
 
 protected:
