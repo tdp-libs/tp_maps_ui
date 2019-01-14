@@ -188,7 +188,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x, 0.0f}));
           verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f,  t.y}));
-          std::vector<GLushort> indexes{3,2,1,0};
+          std::vector<GLuint> indexes{3,2,1,0};
 
           delete d->normalImageVertexBuffer;
           d->normalImageVertexBuffer = shader->generateVertexBuffer(layer()->map(), indexes, verts);
@@ -203,7 +203,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x, 0.0f}));
           verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f,  t.y}));
-          std::vector<GLushort> indexes{3,2,1,0};
+          std::vector<GLuint> indexes{3,2,1,0};
 
           delete d->pressedImageVertexBuffer;
           d->pressedImageVertexBuffer = shader->generateVertexBuffer(layer()->map(), indexes, verts);
@@ -218,7 +218,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
         if(d->pressedImageTextureID>0 && d->pressedImageVertexBuffer)
         {
           shader->setTexture(d->pressedImageTextureID);
-          shader->drawImage(GL_TRIANGLE_FAN, d->pressedImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
+          shader->draw(GL_TRIANGLE_FAN, d->pressedImageVertexBuffer, {1.0f, 1.0f, 1.0f, 1.0f});
         }
       }
       else
@@ -226,7 +226,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
         if(d->normalImageTextureID>0 && d->normalImageVertexBuffer)
         {
           shader->setTexture(d->normalImageTextureID);
-          shader->drawImage(GL_TRIANGLE_FAN, d->normalImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
+          shader->draw(GL_TRIANGLE_FAN, d->normalImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
         }
       }
     }

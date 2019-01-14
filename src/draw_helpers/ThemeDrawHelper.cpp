@@ -391,7 +391,7 @@ struct ThemeDrawHelper::Private
     shader->setScale({width, height, 1.0f});
     shader->setTexture(textureID);
 
-    shader->drawImage(GL_TRIANGLES, frame.vertexBuffer, color);
+    shader->draw(GL_TRIANGLES, frame.vertexBuffer, color);
   }
 
 
