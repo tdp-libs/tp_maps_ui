@@ -11,25 +11,25 @@ namespace tp_maps_ui
 //##################################################################################################
 struct FrameParameters
 {
-  tp_maps::Pixel l;
-  tp_maps::Pixel r;
-  tp_maps::Pixel t;
-  tp_maps::Pixel b;
+  TPPixel l;
+  TPPixel r;
+  TPPixel t;
+  TPPixel b;
 
-  tp_maps::Pixel c;
+  TPPixel c;
 
-  tp_maps::Pixel tl;
-  tp_maps::Pixel tr;
-  tp_maps::Pixel bl;
-  tp_maps::Pixel br;
+  TPPixel tl;
+  TPPixel tr;
+  TPPixel bl;
+  TPPixel br;
 
-  tp_maps::Pixel textColor{0, 0, 0, 255};
+  TPPixel textColor{0, 0, 0, 255};
 };
 
 //##################################################################################################
 struct OverlayParameters
 {
-  tp_maps::Pixel color{0, 0, 0, 100};
+  TPPixel color{0, 0, 0, 100};
 };
 
 //##################################################################################################

@@ -49,7 +49,7 @@ struct TextureBuffer_lt
   }
 
   //################################################################################################
-  TextureCoords_lt drawCell(size_t w, size_t h, const std::function<tp_maps::Pixel(float, float)>& func)
+  TextureCoords_lt drawCell(size_t w, size_t h, const std::function<TPPixel(float, float)>& func)
   {
     TextureCoords_lt textureCoords;
 
@@ -191,7 +191,7 @@ struct ThemeDrawHelper::Private
   }
 
   //################################################################################################
-  static void drawCell(tp_maps::TextureData& textureData, size_t x, size_t y, size_t w, size_t h, const std::function<tp_maps::Pixel(float, float)>& func)
+  static void drawCell(tp_maps::TextureData& textureData, size_t x, size_t y, size_t w, size_t h, const std::function<TPPixel(float, float)>& func)
   {
     float fw = float(w);
     float fh = float(h);
@@ -340,7 +340,7 @@ struct ThemeDrawHelper::Private
     textureData.w = 64;
     textureData.h = 64;
 
-    std::vector<tp_maps::Pixel> pixels;
+    std::vector<TPPixel> pixels;
     pixels.resize(size_t(textureData.w*textureData.h), {0, 0, 0, 0});
     textureData.data = pixels.data();
 
