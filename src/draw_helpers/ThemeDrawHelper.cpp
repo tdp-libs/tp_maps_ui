@@ -35,6 +35,7 @@ struct TextureCoords_lt
 //##################################################################################################
 struct TextureBuffer_lt
 {
+  TPPixel* rawData;
   tp_maps::TextureData& textureData;
 
   size_t cx=1;
@@ -42,7 +43,8 @@ struct TextureBuffer_lt
   size_t rh=1;
 
   //################################################################################################
-  TextureBuffer_lt(tp_maps::TextureData& textureData_):
+  TextureBuffer_lt(TPPixel* rawData_, tp_maps::TextureData& textureData_):
+    rawData(rawData_),
     textureData(textureData_)
   {
 
@@ -88,28 +90,28 @@ struct TextureBuffer_lt
     {
       float fy = float(yy)/fh;
       for(size_t xx=0; xx<w; xx++)
-        textureData.data[(x+xx)+(textureData.w*(y+yy))] = func(float(xx)/fw, fy);
+        rawData[(x+xx)+(textureData.w*(y+yy))] = func(float(xx)/fw, fy);
     }
 
     //-- Draw the cell borders ---------------------------------------------------------------------
     {
       for(size_t xx=0; xx<w; xx++)
       {
-        textureData.data[(x+xx)+(textureData.w*(y-1))] = textureData.data[(x+xx)+(textureData.w*(y))];
-        textureData.data[(x+xx)+(textureData.w*(y+h))] = textureData.data[(x+xx)+(textureData.w*((y+h)-1))];
+        rawData[(x+xx)+(textureData.w*(y-1))] = rawData[(x+xx)+(textureData.w*(y))];
+        rawData[(x+xx)+(textureData.w*(y+h))] = rawData[(x+xx)+(textureData.w*((y+h)-1))];
       }
 
       for(size_t yy=0; yy<h; yy++)
       {
-        textureData.data[(x-1)+(textureData.w*(y+yy))] = textureData.data[(x)+(textureData.w*(y+yy))];
-        textureData.data[(x+w)+(textureData.w*(y+yy))] = textureData.data[((x+w)-1)+(textureData.w*(y+yy))];
+        rawData[(x-1)+(textureData.w*(y+yy))] = rawData[(x)+(textureData.w*(y+yy))];
+        rawData[(x+w)+(textureData.w*(y+yy))] = rawData[((x+w)-1)+(textureData.w*(y+yy))];
       }
 
-      textureData.data[(x-1)+(textureData.w*(y-1))] = textureData.data[x+(textureData.w*y)];
-      textureData.data[(x+w)+(textureData.w*(y-1))] = textureData.data[((x+w)-1)+(textureData.w*y)];
+      rawData[(x-1)+(textureData.w*(y-1))] = rawData[x+(textureData.w*y)];
+      rawData[(x+w)+(textureData.w*(y-1))] = rawData[((x+w)-1)+(textureData.w*y)];
 
-      textureData.data[(x-1)+(textureData.w*(y+h))] = textureData.data[x+(textureData.w*((y+h)-1))];
-      textureData.data[(x+w)+(textureData.w*(y+h))] = textureData.data[((x+w)-1)+(textureData.w*((y+h)-1))];
+      rawData[(x-1)+(textureData.w*(y+h))] = rawData[x+(textureData.w*((y+h)-1))];
+      rawData[(x+w)+(textureData.w*(y+h))] = rawData[((x+w)-1)+(textureData.w*((y+h)-1))];
     }
 
     //-- Calculate the texture coords --------------------------------------------------------------
@@ -191,7 +193,7 @@ struct ThemeDrawHelper::Private
   }
 
   //################################################################################################
-  static void drawCell(tp_maps::TextureData& textureData, size_t x, size_t y, size_t w, size_t h, const std::function<TPPixel(float, float)>& func)
+  static void drawCell(TPPixel* rawData, tp_maps::TextureData& textureData, size_t x, size_t y, size_t w, size_t h, const std::function<TPPixel(float, float)>& func)
   {
     float fw = float(w);
     float fh = float(h);
@@ -199,7 +201,7 @@ struct ThemeDrawHelper::Private
     {
       float fy = float(yy)/fh;
       for(size_t xx=0; xx<w; xx++)
-        textureData.data[(x+xx)+(textureData.w*(y+yy))] = func(float(xx)/fw, fy);
+        rawData[(x+xx)+(textureData.w*(y+yy))] = func(float(xx)/fw, fy);
     }
   }
 
@@ -344,7 +346,7 @@ struct ThemeDrawHelper::Private
     pixels.resize(size_t(textureData.w*textureData.h), {0, 0, 0, 0});
     textureData.data = pixels.data();
 
-    TextureBuffer_lt textureBuffer(textureData);
+    TextureBuffer_lt textureBuffer(pixels.data(), textureData);
 
     generateFrame(textureBuffer,       normalPanelFrameDetails, themeParameters.normalPanelFrame      );
     generateFrame(textureBuffer,      raisedButtonFrameDetails, themeParameters.raisedButtonFrame     );
