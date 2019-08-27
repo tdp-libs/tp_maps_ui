@@ -20,6 +20,12 @@ struct UILayer::Private
 
   int width{0};
   int height{0};
+
+  //################################################################################################
+  ~Private()
+  {
+    tpDeleteAll(drawHelpers);
+  }
 };
 
 //##################################################################################################
@@ -99,6 +105,9 @@ void UILayer::invalidateBuffers()
 //##################################################################################################
 bool UILayer::mouseEvent(const tp_maps::MouseEvent& event)
 {
+  if(!visible())
+    return false;
+
   return d->rootWidget->mouseEventInternal(event);
 }
 

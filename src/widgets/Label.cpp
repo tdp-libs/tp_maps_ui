@@ -8,6 +8,8 @@
 #include "tp_maps/FontRenderer.h"
 #include "tp_maps/shaders/FontShader.h"
 
+#include "tp_utils/DebugUtils.h"
+
 #include "glm/gtx/transform.hpp"
 
 #include <memory>
@@ -105,6 +107,7 @@ void Label::render(tp_maps::RenderInfo& renderInfo)
 
     if(d->regenerateText)
     {
+      d->regenerateText = false;
       tp_maps::PreparedStringConfig config;
       config.topDown = true;
 

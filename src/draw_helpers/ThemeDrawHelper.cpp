@@ -464,7 +464,7 @@ void ThemeDrawHelper::drawBox(const glm::mat4& matrix, float width, float height
 void ThemeDrawHelper::drawOverlay(const glm::mat4& matrix, float width, float height, float fade)
 {
   auto c = d->color;
-  c.a = fade;
+  c.w = fade;
   d->drawFrame(matrix, d->overlayFrameDetails, width, height, c);
 }
 
