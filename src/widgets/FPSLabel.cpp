@@ -42,7 +42,7 @@ void FPSLabel::render(tp_maps::RenderInfo& renderInfo)
     d->lastUpdate = now;
     double first = double(tp_utils::currentTimeMS() - d->frameTimes.front())/1000.0;
 
-    double fps = d->frameTimes.size();
+    double fps = double(d->frameTimes.size());
     if(first>0.01)
       fps = fps / first;
 

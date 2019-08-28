@@ -108,13 +108,13 @@ void Slider::render(tp_maps::RenderInfo& renderInfo)
 
       {
         auto mm = glm::translate(m, {float(d->margin), float(height()-d->trackHeight)/2.0f, 0.0f});
-        drawHelper()->drawBox(mm, trackLength, d->trackHeight, BoxType::Raised, FillType::Editable, VisualModifier::Pressed);
+        drawHelper()->drawBox(mm, float(trackLength), float(d->trackHeight), BoxType::Raised, FillType::Editable, VisualModifier::Pressed);
       }
 
       {
         int position = int(std::lround(float(trackLength)*f)) + int(d->margin)-(int(d->handleWidth)/2);
         auto mm = glm::translate(m, {float(position), 0.0f, 0.0f});
-        drawHelper()->drawBox(mm, d->handleWidth, height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
+        drawHelper()->drawBox(mm, float(d->handleWidth), height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
       }
     }
   }
