@@ -20,7 +20,7 @@ struct FrameDetails_lt
   std::vector<tp_maps::FrameShader::Vertex> verts;
   tp_maps::FrameShader::VertexBuffer* vertexBuffer{nullptr};
   bool updateVertexBuffer{true};
-  glm::vec4 textColor;
+  glm::vec4 textColor{0.0f, 0.0f, 0.0f, 1.0f};
 };
 
 //##################################################################################################
@@ -471,6 +471,7 @@ void ThemeDrawHelper::drawOverlay(const glm::mat4& matrix, float width, float he
 //##################################################################################################
 glm::vec4 ThemeDrawHelper::textColor(BoxType boxType, FillType fillType, VisualModifier visualModifier)
 {
+  d->populateGeometry();
   return d->selectFrameDetails(boxType, fillType, visualModifier).textColor;
 }
 

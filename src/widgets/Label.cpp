@@ -23,6 +23,10 @@ struct Label::Private
   std::u16string text;
   std::unique_ptr<tp_maps::FontShader::PreparedString> preparedString;
   HAlignment hAlignment{HAlignment::Left};
+
+  glm::vec4 color{0.0f, 0.0f, 0.0f, 1.0f};
+  bool colorSet{false};
+
   bool regenerateText{true};
 
   //################################################################################################
@@ -77,7 +81,15 @@ void Label::setHAlignment(HAlignment hAlignment)
   update();
 }
 
-//################################################################################################
+//##################################################################################################
+void Label::setColor(const glm::vec4& color)
+{
+  d->color = color;
+  d->colorSet = true;
+  update();
+}
+
+//##################################################################################################
 std::pair<Dim, Dim> Label::sizeHint() const
 {
   auto f = font()?font()->font():nullptr;
@@ -124,7 +136,7 @@ void Label::render(tp_maps::RenderInfo& renderInfo)
     if(!d->preparedString)
       return;
 
-    auto color = drawHelper()->textColor(BoxType::Raised, FillType::Panel, VisualModifier::Normal);
+    auto color = d->colorSet?d->color:drawHelper()->textColor(BoxType::Raised, FillType::Panel, VisualModifier::Normal);
 
     shader->use();
 

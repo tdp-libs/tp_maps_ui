@@ -30,6 +30,9 @@ public:
   void setHAlignment(HAlignment alignment);
 
   //################################################################################################
+  void setColor(const glm::vec4& color);
+
+  //################################################################################################
   std::pair<Dim, Dim> sizeHint() const override;
 
 protected:
