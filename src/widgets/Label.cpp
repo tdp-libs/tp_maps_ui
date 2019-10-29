@@ -148,7 +148,7 @@ void Label::render(tp_maps::RenderInfo& renderInfo)
     case HAlignment::Right:  xTrans = width();      break;
     };
 
-    shader->setMatrix(glm::translate(m, {xTrans, height()/1.55f, 0.0f}));
+    shader->setMatrix(glm::translate(m, {xTrans, height()/2.0f, 0.0f}));
     shader->setColor(color);
     shader->drawPreparedString(*d->preparedString.get());
   }
