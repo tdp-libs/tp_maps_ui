@@ -16,6 +16,9 @@ struct ItemDetails_lt
 //##################################################################################################
 struct TableView::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::TableView::Private");
+  TP_NONCOPYABLE(Private);
+
   TableView* q;
 
   std::function<size_t()> numberOfRows;

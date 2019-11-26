@@ -13,6 +13,10 @@ namespace tp_maps_ui
 //##################################################################################################
 struct UILayer::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::UILayer::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
+
   Widget* rootWidget{nullptr};
   tp_maps::FontRenderer* font{nullptr};
   DrawHelper* drawHelper{nullptr};

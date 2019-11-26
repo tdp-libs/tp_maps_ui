@@ -6,7 +6,9 @@ namespace tp_maps_ui
 //##################################################################################################
 struct TreeWidget::Private
 {
-
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::TreeWidget::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
 };
 
 //##################################################################################################

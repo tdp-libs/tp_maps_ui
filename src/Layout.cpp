@@ -7,6 +7,10 @@ namespace tp_maps_ui
 //##################################################################################################
 struct Layout::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::Layout::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
+
   Widget* parent{nullptr};
 
   Margins contentsMargins;

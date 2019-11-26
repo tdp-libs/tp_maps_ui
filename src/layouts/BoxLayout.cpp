@@ -99,6 +99,9 @@ std::vector<SizeDetails_lt> calculateSizes(const std::vector<Widget*>& children,
 //##################################################################################################
 struct BoxLayout::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::BoxLayout::Private");
+  TP_NONCOPYABLE(Private);
+
   Orientation orientation;
 
   Private(Orientation orientation_):

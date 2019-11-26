@@ -10,6 +10,10 @@ namespace tp_maps_ui
 //##################################################################################################
 struct FPSLabel::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::FPSLabel::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
+
   std::queue<int64_t> frameTimes;
   int64_t lastUpdate{0};
 };

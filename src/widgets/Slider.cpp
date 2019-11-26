@@ -20,6 +20,10 @@ namespace tp_maps_ui
 //##################################################################################################
 struct Slider::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::Slider::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
+
   //This represents the button state, normal, hover, presses, etc...
   VisualModifier currentVisualModifier{VisualModifier::Normal};
 

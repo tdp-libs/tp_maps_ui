@@ -130,6 +130,9 @@ struct TextureBuffer_lt
 //##################################################################################################
 struct ThemeDrawHelper::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::ThemeDrawHelper::Private");
+  TP_NONCOPYABLE(Private);
+
   ThemeDrawHelper* q;
 
   ThemeParameters themeParameters;

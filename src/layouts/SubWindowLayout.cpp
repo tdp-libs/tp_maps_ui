@@ -10,11 +10,9 @@ namespace tp_maps_ui
 //##################################################################################################
 struct SubWindowLayout::Private
 {
-
-  Private()
-  {
-
-  }
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::SubWindowLayout::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
 };
 
 //##################################################################################################

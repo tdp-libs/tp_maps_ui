@@ -18,6 +18,10 @@ namespace tp_maps_ui
 //##################################################################################################
 struct PushButton::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::PushButton::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
+
   std::u16string text;
   std::unique_ptr<tp_maps::FontShader::PreparedString> preparedString;
 

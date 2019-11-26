@@ -29,6 +29,9 @@ struct PageDetails_lt
 //##################################################################################################
 struct CollapsiblePanel::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::CollapsiblePanel::Private");
+  TP_NONCOPYABLE(Private);
+
   CollapsiblePanel* q;
   std::vector<PageDetails_lt*> pages;
   FixedLayout* layout{nullptr};

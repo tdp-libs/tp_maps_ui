@@ -6,7 +6,9 @@ namespace tp_maps_ui
 //##################################################################################################
 struct LineEdit::Private
 {
-
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::LineEdit::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
 };
 
 //##################################################################################################

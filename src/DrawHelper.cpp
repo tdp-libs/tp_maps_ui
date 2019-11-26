@@ -7,6 +7,9 @@ namespace tp_maps_ui
 //##################################################################################################
 struct DrawHelper::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::DrawHelper::Private");
+  TP_NONCOPYABLE(Private);
+
   UILayer* layer;
 
   BoxParams defaultBoxParams;

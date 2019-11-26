@@ -37,11 +37,9 @@ public:
 //##################################################################################################
 struct FixedLayout::Private
 {
-
-  Private()
-  {
-
-  }
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::FixedLayout::Private");
+  TP_NONCOPYABLE(Private);
+  Private() = default;
 };
 
 //##################################################################################################

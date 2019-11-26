@@ -20,6 +20,9 @@ namespace tp_maps_ui
 //##################################################################################################
 struct Label::Private
 {
+  TP_REF_COUNT_OBJECTS("tp_maps_ui::Label::Private");
+  TP_NONCOPYABLE(Private);
+
   std::u16string text;
   std::unique_ptr<tp_maps::FontShader::PreparedString> preparedString;
   HAlignment hAlignment{HAlignment::Left};
