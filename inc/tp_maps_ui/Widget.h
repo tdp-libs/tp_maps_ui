@@ -9,6 +9,9 @@ namespace tp_maps
 {
 class RenderInfo;
 struct MouseEvent;
+struct KeyEvent;
+struct TextEditingEvent;
+struct TextInputEvent;
 class FontRenderer;
 }
 
@@ -134,6 +137,14 @@ public:
   void setCurrentAnimation(const std::function<bool(double)>& animation);
 
   //################################################################################################
+  //! Give this widget focus.
+  void focus();
+
+  //################################################################################################
+  //! Returns true if this widget currently has focus.
+  bool hasFocus() const;
+
+  //################################################################################################
   //! Used by layout classes to store information about widgets that they layout
   template<typename T, typename... Args>
   T* layoutParams(Args&&... args)
@@ -178,12 +189,44 @@ protected:
   virtual bool mouseEvent(const tp_maps::MouseEvent& event);
 
   //################################################################################################
+  virtual bool keyEvent(const tp_maps::KeyEvent& event);
+
+  //################################################################################################
+  virtual bool textEditingEvent(const tp_maps::TextEditingEvent& event);
+
+  //################################################################################################
+  virtual bool textInputEvent(const tp_maps::TextInputEvent& event);
+
+  //################################################################################################
+  //! Called each time the currently focused widget changes.
+  /*!
+  \note Always call the base implementation.
+  \param focusedWidget the currently focused widget or nullptr.
+  */
+  virtual void focusEvent(Widget* focusedWidget);
+
+  //################################################################################################
   //! Update the state of the animation
   virtual void animate(double timestampMS);
 
   //################################################################################################
   //! Calls update on the map
   void update();
+
+  //################################################################################################
+  //! Register this widget to receive text editing events.
+  /*!
+  This will register this widget for text editing events and if required show the keyboard. The
+  geometry of the widget may be used to position the on screen keyboard and the screen.
+  */
+  void startTextInput();
+
+  //################################################################################################
+  //! Unregister this widget to receive text editing events.
+  /*!
+  This will unregister this widget for text editing events and if required hide the keyboard.
+  */
+  void stopTextInput();
 
 private:
   //################################################################################################
@@ -194,6 +237,15 @@ private:
 
   //################################################################################################
   bool mouseEventInternal(const tp_maps::MouseEvent& event);
+
+  //################################################################################################
+  bool keyEventInternal(const tp_maps::KeyEvent& event);
+
+  //################################################################################################
+  bool textEditingEventInternal(const tp_maps::TextEditingEvent& event);
+
+  //################################################################################################
+  bool textInputEventInternal(const tp_maps::TextInputEvent& event);
 
   //################################################################################################
   void animateInternal(double timestampMS);

@@ -49,6 +49,7 @@ struct Widget::Private
 
   bool visible{true};
   bool transparentToMouseEvents{false};
+  bool hasFocus{false};
 
   bool calculateGeometry{false};
 
@@ -368,6 +369,18 @@ void Widget::setCurrentAnimation(const std::function<bool(double)>& animation)
 {
   d->animation = animation;
 }
+//##################################################################################################
+void Widget::focus()
+{
+  if(d->layer)
+    d->layer->focus(this);
+}
+
+//##################################################################################################
+bool Widget::hasFocus() const
+{
+  return d->hasFocus;
+}
 
 //##################################################################################################
 LayoutParams* Widget::layoutParams()
@@ -397,8 +410,39 @@ void Widget::invalidateBuffers()
 //##################################################################################################
 bool Widget::mouseEvent(const tp_maps::MouseEvent& event)
 {
+  if(event.type == tp_maps::MouseEventType::Press)
+    focus();
+
+  return true;
+}
+
+//##################################################################################################
+bool Widget::keyEvent(const tp_maps::KeyEvent& event)
+{
   TP_UNUSED(event);
   return true;
+}
+
+//##################################################################################################
+bool Widget::textEditingEvent(const tp_maps::TextEditingEvent& event)
+{
+  TP_UNUSED(event);
+  return true;
+}
+
+//##################################################################################################
+bool Widget::textInputEvent(const tp_maps::TextInputEvent& event)
+{
+  TP_UNUSED(event);
+  return true;
+}
+
+//##################################################################################################
+void Widget::focusEvent(Widget* focusedWidget)
+{
+  d->hasFocus = (focusedWidget == this);
+  for(auto child : d->children)
+    child->focusEvent(focusedWidget);
 }
 
 //##################################################################################################
@@ -412,6 +456,20 @@ void Widget::update()
 {
   if(d->layer)
     d->layer->update();
+}
+
+//##################################################################################################
+void Widget::startTextInput()
+{
+  if(d->layer)
+    d->layer->startTextInput(this);
+}
+
+//##################################################################################################
+void Widget::stopTextInput()
+{
+  if(d->layer)
+    d->layer->stopTextInput(this);
 }
 
 //##################################################################################################
@@ -460,6 +518,45 @@ bool Widget::mouseEventInternal(const tp_maps::MouseEvent& event)
     return false;
 
   return mouseEvent(event);
+}
+
+//##################################################################################################
+bool Widget::keyEventInternal(const tp_maps::KeyEvent& event)
+{
+  if(d->hasFocus)
+    return keyEvent(event);
+
+  for(auto i=d->children.rbegin(); i!=d->children.rend(); ++i)
+    if((*i)->keyEventInternal(event))
+      return true;
+
+  return false;
+}
+
+//##################################################################################################
+bool Widget::textEditingEventInternal(const tp_maps::TextEditingEvent& event)
+{
+  if(d->hasFocus)
+    return textEditingEvent(event);
+
+  for(auto i=d->children.rbegin(); i!=d->children.rend(); ++i)
+    if((*i)->textEditingEventInternal(event))
+      return true;
+
+  return false;
+}
+
+//##################################################################################################
+bool Widget::textInputEventInternal(const tp_maps::TextInputEvent& event)
+{
+  if(d->hasFocus)
+    return textInputEvent(event);
+
+  for(auto i=d->children.rbegin(); i!=d->children.rend(); ++i)
+    if((*i)->textInputEventInternal(event))
+      return true;
+
+  return false;
 }
 
 //##################################################################################################

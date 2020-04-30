@@ -1,4 +1,17 @@
 #include "tp_maps_ui/widgets/LineEdit.h"
+#include "tp_maps_ui/layers/UILayer.h"
+#include "tp_maps_ui/DrawHelper.h"
+
+#include "tp_maps/Map.h"
+#include "tp_maps/MouseEvent.h"
+#include "tp_maps/KeyEvent.h"
+#include "tp_maps/shaders/FontShader.h"
+
+#include "tp_utils/DebugUtils.h"
+
+#include "glm/gtx/transform.hpp"
+
+#include <memory>
 
 namespace tp_maps_ui
 {
@@ -9,12 +22,21 @@ struct LineEdit::Private
   TP_REF_COUNT_OBJECTS("tp_maps_ui::LineEdit::Private");
   TP_NONCOPYABLE(Private);
   Private() = default;
+
+  std::u16string text{u"Hello world"};
+  std::unique_ptr<tp_maps::FontShader::PreparedString> preparedString;
+
+  //This represents the button state, normal, hover, presses, etc...
+  VisualModifier currentVisualModifier{VisualModifier::Normal};
+
+  bool hasTextEditing{false};
+  bool regenerateText{true};
 };
 
 //##################################################################################################
 LineEdit::LineEdit(Widget* parent):
-    Widget(parent),
-    d(new Private())
+  Widget(parent),
+  d(new Private())
 {
 
 }
@@ -28,7 +50,40 @@ LineEdit::~LineEdit()
 //##################################################################################################
 void LineEdit::render(tp_maps::RenderInfo& renderInfo)
 {
-  Widget::render(renderInfo);
+  TP_UNUSED(renderInfo);
+
+  auto m = matrix();
+
+  //Draw the button background.
+  if(drawHelper())
+  {
+    drawHelper()->drawBox(m, width(), height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
+  }
+
+  //Draw the text.
+  if(font() && !d->text.empty())
+  {
+    auto shader = layer()->map()->getShader<tp_maps::FontShader>();
+    if(shader->error())
+      return;
+
+    if(d->regenerateText)
+    {
+      tp_maps::PreparedStringConfig config;
+      config.topDown = true;
+      d->preparedString.reset(new tp_maps::FontShader::PreparedString(shader, font(), d->text, config));
+    }
+
+    if(!d->preparedString)
+      return;
+
+    auto color = drawHelper()->textColor(BoxType::Raised, FillType::Button, d->currentVisualModifier);
+
+    shader->use();
+    shader->setMatrix(glm::translate(m, {width()/2.0f, height()/1.55f, 0.0f}));
+    shader->setColor(color);
+    shader->drawPreparedString(*d->preparedString.get());
+  }
 }
 
 //##################################################################################################
@@ -37,10 +92,74 @@ void LineEdit::invalidateBuffers()
   Widget::invalidateBuffers();
 }
 
+////##################################################################################################
+//bool LineEdit::mouseEvent(const tp_maps::MouseEvent& event)
+//{
+//  if(event.type == tp_maps::MouseEventType::Press)
+//  {
+//    focus();
+//    return true;
+//  }
+//  return Widget::mouseEvent(event);
+//}
+
 //##################################################################################################
-bool LineEdit::mouseEvent(const tp_maps::MouseEvent& event)
+bool LineEdit::keyEvent(const tp_maps::KeyEvent& event)
 {
-  return Widget::mouseEvent(event);
+  if(event.type != tp_maps::KeyEventType::Press)
+    return true;
+
+  switch(event.scancode)
+  {
+  case 42: //-- Backspace --------------------------------------------------------------------------
+  {
+    if(!d->text.empty())
+    {
+      d->text.pop_back();
+      d->regenerateText = true;
+      update();
+    }
+    break;
+  }
+
+  default:
+    break;
+  }
+
+  return true;
+}
+
+//##################################################################################################
+bool LineEdit::textEditingEvent(const tp_maps::TextEditingEvent& event)
+{
+  return true;
+}
+
+//##################################################################################################
+bool LineEdit::textInputEvent(const tp_maps::TextInputEvent& event)
+{
+  d->text += tpFromUTF8(event.text);
+  d->regenerateText = true;
+  update();
+  return true;
+}
+
+//##################################################################################################
+void LineEdit::focusEvent(Widget* focusedWidget)
+{
+  Widget::focusEvent(focusedWidget);
+
+  if(d->hasTextEditing)
+  {
+    d->hasTextEditing = false;
+    stopTextInput();
+  }
+
+  if(hasFocus())
+  {
+    d->hasTextEditing = true;
+    startTextInput();
+  }
 }
 
 //##################################################################################################

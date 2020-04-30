@@ -64,7 +64,35 @@ protected:
   bool mouseEvent(const tp_maps::MouseEvent& event) override;
 
   //################################################################################################
+  bool keyEvent(const tp_maps::KeyEvent& event) override;
+
+  //################################################################################################
+  bool textEditingEvent(const tp_maps::TextEditingEvent& event) override;
+
+  //################################################################################################
+  bool textInputEvent(const tp_maps::TextInputEvent& event) override;
+
+  //################################################################################################
   void animate(double timestampMS) override;
+
+  //################################################################################################
+  //! Give a widget focus.
+  void focus(Widget* widget);
+
+  //################################################################################################
+  //! Register widget to receive text editing events.
+  /*!
+  This will register widget for text editing events and if required show the keyboard. The geometry
+  of the widget may be used to position the on screen keyboard and the screen.
+  */
+  void startTextInput(Widget* widget);
+
+  //################################################################################################
+  //! Unregister widget to receive text editing events.
+  /*!
+  This will unregister widget for text editing events and if required hide the keyboard.
+  */
+  void stopTextInput(Widget* widget);
 
 private:
   //################################################################################################

@@ -256,13 +256,11 @@ bool PushButton::mouseEvent(const tp_maps::MouseEvent& event)
   {
     d->currentVisualModifier = VisualModifier::Pressed;
     update();
-    return true;
+    break;
   }
 
   case tp_maps::MouseEventType::Move:
   {
-    if(d->currentVisualModifier == VisualModifier::Pressed)
-      return true;
     break;
   }
 
@@ -273,7 +271,6 @@ bool PushButton::mouseEvent(const tp_maps::MouseEvent& event)
       d->currentVisualModifier = VisualModifier::Normal;
       clicked();
       update();
-      return true;
     }
     break;
   }

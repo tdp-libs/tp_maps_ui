@@ -23,8 +23,20 @@ protected:
   //################################################################################################
   void invalidateBuffers() override;
 
+//  //################################################################################################
+//  bool mouseEvent(const tp_maps::MouseEvent& event) override;
+
   //################################################################################################
-  bool mouseEvent(const tp_maps::MouseEvent& event) override;
+  bool keyEvent(const tp_maps::KeyEvent& event) override;
+
+  //################################################################################################
+  bool textEditingEvent(const tp_maps::TextEditingEvent& event) override;
+
+  //################################################################################################
+  bool textInputEvent(const tp_maps::TextInputEvent& event) override;
+
+  //################################################################################################
+  void focusEvent(Widget* focusedWidget) override;
 
   //################################################################################################
   void animate(double timestampMS) override;

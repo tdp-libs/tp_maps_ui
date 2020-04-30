@@ -116,9 +116,63 @@ bool UILayer::mouseEvent(const tp_maps::MouseEvent& event)
 }
 
 //##################################################################################################
+bool UILayer::keyEvent(const tp_maps::KeyEvent& event)
+{
+  if(!visible())
+    return false;
+
+  return d->rootWidget->keyEventInternal(event);
+}
+
+//##################################################################################################
+bool UILayer::textEditingEvent(const tp_maps::TextEditingEvent& event)
+{
+  if(!visible())
+    return false;
+
+  return d->rootWidget->textEditingEventInternal(event);
+}
+
+//##################################################################################################
+bool UILayer::textInputEvent(const tp_maps::TextInputEvent& event)
+{
+  if(!visible())
+    return false;
+
+  return d->rootWidget->textInputEventInternal(event);
+}
+
+//##################################################################################################
 void UILayer::animate(double timestampMS)
 {
   d->rootWidget->animateInternal(timestampMS);
+}
+
+//##################################################################################################
+void UILayer::focus(Widget* widget)
+{
+  // Clear any existing focus.
+  d->rootWidget->focusEvent(nullptr);
+
+  // Create the new focus.
+  if(widget)
+    d->rootWidget->focusEvent(widget);
+}
+
+//##################################################################################################
+void UILayer::startTextInput(Widget* widget)
+{
+  TP_UNUSED(widget);
+  if(map())
+    map()->startTextInput();
+}
+
+//##################################################################################################
+void UILayer::stopTextInput(Widget* widget)
+{
+  TP_UNUSED(widget);
+  if(map())
+    map()->stopTextInput();
 }
 
 //##################################################################################################
