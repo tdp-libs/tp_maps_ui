@@ -24,6 +24,7 @@ struct FrameParameters
   TPPixel br;
 
   TPPixel textColor{0, 0, 0, 255};
+  TPPixel placeholderTextColor{128, 128, 128, 255};
 };
 
 //##################################################################################################
@@ -36,6 +37,7 @@ struct OverlayParameters
 struct ThemeParameters
 {
   FrameParameters normalPanelFrame;
+  FrameParameters editableFrame;
 
   FrameParameters raisedButtonFrame;
   FrameParameters sunkenButtonFrame;
@@ -67,6 +69,9 @@ public:
 
   //################################################################################################
   glm::vec4 textColor(BoxType boxType, FillType fillType, VisualModifier visualModifier) override;
+
+  //################################################################################################
+  glm::vec4 placeholderTextColor(BoxType boxType, FillType fillType, VisualModifier visualModifier) override;
 
 protected:
   //################################################################################################

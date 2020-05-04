@@ -23,14 +23,18 @@ struct LineEdit::Private
   TP_NONCOPYABLE(Private);
   Private() = default;
 
-  std::u16string text{u"Hello world"};
+  std::u16string text;
   std::unique_ptr<tp_maps::FontShader::PreparedString> preparedString;
+
+  std::u16string placeholderText;
+  std::unique_ptr<tp_maps::FontShader::PreparedString> placeholderPreparedString;
 
   //This represents the button state, normal, hover, presses, etc...
   VisualModifier currentVisualModifier{VisualModifier::Normal};
 
   bool hasTextEditing{false};
   bool regenerateText{true};
+  bool regeneratePlaceholderText{true};
 };
 
 //##################################################################################################
@@ -48,6 +52,34 @@ LineEdit::~LineEdit()
 }
 
 //##################################################################################################
+std::u16string LineEdit::text() const
+{
+  return d->text;
+}
+
+//##################################################################################################
+void LineEdit::setText(const std::u16string& text)
+{
+  d->text = text;
+  d->regenerateText = true;
+  update();
+}
+
+//##################################################################################################
+std::u16string LineEdit::placeholderText() const
+{
+  return d->placeholderText;
+}
+
+//##################################################################################################
+void LineEdit::setPlaceholderText(const std::u16string& placeholderText)
+{
+  d->placeholderText = placeholderText;
+  d->regeneratePlaceholderText = true;
+  update();
+}
+
+//##################################################################################################
 void LineEdit::render(tp_maps::RenderInfo& renderInfo)
 {
   TP_UNUSED(renderInfo);
@@ -57,7 +89,7 @@ void LineEdit::render(tp_maps::RenderInfo& renderInfo)
   //Draw the button background.
   if(drawHelper())
   {
-    drawHelper()->drawBox(m, width(), height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
+    drawHelper()->drawBox(m, width(), height(), BoxType::Sunk, FillType::Editable, d->currentVisualModifier);
   }
 
   //Draw the text.
@@ -69,6 +101,7 @@ void LineEdit::render(tp_maps::RenderInfo& renderInfo)
 
     if(d->regenerateText)
     {
+      d->regenerateText = false;
       tp_maps::PreparedStringConfig config;
       config.topDown = true;
       d->preparedString.reset(new tp_maps::FontShader::PreparedString(shader, font(), d->text, config));
@@ -84,6 +117,32 @@ void LineEdit::render(tp_maps::RenderInfo& renderInfo)
     shader->setColor(color);
     shader->drawPreparedString(*d->preparedString.get());
   }
+
+  //Draw the placeholder text.
+  if(font() && d->text.empty() && !d->placeholderText.empty())
+  {
+    auto shader = layer()->map()->getShader<tp_maps::FontShader>();
+    if(shader->error())
+      return;
+
+    if(d->regeneratePlaceholderText)
+    {
+      d->regeneratePlaceholderText = false;
+      tp_maps::PreparedStringConfig config;
+      config.topDown = true;
+      d->placeholderPreparedString.reset(new tp_maps::FontShader::PreparedString(shader, font(), d->placeholderText, config));
+    }
+
+    if(!d->placeholderPreparedString)
+      return;
+
+    auto color = drawHelper()->placeholderTextColor(BoxType::Raised, FillType::Button, d->currentVisualModifier);
+
+    shader->use();
+    shader->setMatrix(glm::translate(m, {width()/2.0f, height()/1.55f, 0.0f}));
+    shader->setColor(color);
+    shader->drawPreparedString(*d->placeholderPreparedString.get());
+  }
 }
 
 //##################################################################################################
@@ -91,17 +150,6 @@ void LineEdit::invalidateBuffers()
 {
   Widget::invalidateBuffers();
 }
-
-////##################################################################################################
-//bool LineEdit::mouseEvent(const tp_maps::MouseEvent& event)
-//{
-//  if(event.type == tp_maps::MouseEventType::Press)
-//  {
-//    focus();
-//    return true;
-//  }
-//  return Widget::mouseEvent(event);
-//}
 
 //##################################################################################################
 bool LineEdit::keyEvent(const tp_maps::KeyEvent& event)

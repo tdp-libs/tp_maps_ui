@@ -21,6 +21,7 @@ struct FrameDetails_lt
   tp_maps::FrameShader::VertexBuffer* vertexBuffer{nullptr};
   bool updateVertexBuffer{true};
   glm::vec4 textColor{0.0f, 0.0f, 0.0f, 1.0f};
+  glm::vec4 placeholderTextColor{0.5f, 0.5f, 0.5f, 1.0f};
 };
 
 //##################################################################################################
@@ -138,6 +139,7 @@ struct ThemeDrawHelper::Private
   ThemeParameters themeParameters;
 
   FrameDetails_lt normalPanelFrameDetails;
+  FrameDetails_lt editableFrameDetails;
   FrameDetails_lt raisedButtonFrameDetails;
   FrameDetails_lt sunkenButtonFrameDetails;
   FrameDetails_lt checkedCheckBoxFrameDetails;
@@ -179,6 +181,9 @@ struct ThemeDrawHelper::Private
     delete normalPanelFrameDetails.vertexBuffer;
     normalPanelFrameDetails.vertexBuffer=nullptr;
 
+    delete editableFrameDetails.vertexBuffer;
+    editableFrameDetails.vertexBuffer=nullptr;
+
     delete raisedButtonFrameDetails.vertexBuffer;
     raisedButtonFrameDetails.vertexBuffer=nullptr;
 
@@ -215,6 +220,11 @@ struct ThemeDrawHelper::Private
     frame.textColor.y = float(colors.textColor.g)/255.0f;
     frame.textColor.z = float(colors.textColor.b)/255.0f;
     frame.textColor.w = float(colors.textColor.a)/255.0f;
+
+    frame.placeholderTextColor.x = float(colors.placeholderTextColor.r)/255.0f;
+    frame.placeholderTextColor.y = float(colors.placeholderTextColor.g)/255.0f;
+    frame.placeholderTextColor.z = float(colors.placeholderTextColor.b)/255.0f;
+    frame.placeholderTextColor.w = float(colors.placeholderTextColor.a)/255.0f;
 
     size_t borderSize = 1;
     size_t centerSize = 1;
@@ -352,6 +362,7 @@ struct ThemeDrawHelper::Private
     TextureBuffer_lt textureBuffer(pixels.data(), textureData);
 
     generateFrame(textureBuffer,       normalPanelFrameDetails, themeParameters.normalPanelFrame      );
+    generateFrame(textureBuffer,          editableFrameDetails, themeParameters.editableFrame         );
     generateFrame(textureBuffer,      raisedButtonFrameDetails, themeParameters.raisedButtonFrame     );
     generateFrame(textureBuffer,      sunkenButtonFrameDetails, themeParameters.sunkenButtonFrame     );
     generateFrame(textureBuffer,   checkedCheckBoxFrameDetails, themeParameters.checkedCheckBoxFrame  );
@@ -407,10 +418,6 @@ struct ThemeDrawHelper::Private
 
     switch(fillType)
     {
-    case FillType::Panel:
-    {
-      return normalPanelFrameDetails;
-    }
     case FillType::CheckBox:
     {
       switch(visualModifier)
@@ -421,6 +428,14 @@ struct ThemeDrawHelper::Private
       default:
         return uncheckedCheckBoxFrameDetails;
       }
+    }
+    case FillType::Editable:
+    {
+      return editableFrameDetails;
+    }
+    case FillType::Panel:
+    {
+      return normalPanelFrameDetails;
     }
     default:
     {
@@ -476,6 +491,13 @@ glm::vec4 ThemeDrawHelper::textColor(BoxType boxType, FillType fillType, VisualM
 {
   d->populateGeometry();
   return d->selectFrameDetails(boxType, fillType, visualModifier).textColor;
+}
+
+//##################################################################################################
+glm::vec4 ThemeDrawHelper::placeholderTextColor(BoxType boxType, FillType fillType, VisualModifier visualModifier)
+{
+  d->populateGeometry();
+  return d->selectFrameDetails(boxType, fillType, visualModifier).placeholderTextColor;
 }
 
 //##################################################################################################

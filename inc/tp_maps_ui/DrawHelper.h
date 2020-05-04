@@ -87,6 +87,10 @@ public:
   virtual glm::vec4 textColor(BoxType boxType, FillType fillType, VisualModifier visualModifier) = 0;
 
   //################################################################################################
+  //! The color for background text, for example the placeholder in a line edit.
+  virtual glm::vec4 placeholderTextColor(BoxType boxType, FillType fillType, VisualModifier visualModifier) = 0;
+
+  //################################################################################################
   const BoxParams& boxParams(BoxType boxType) const;
 
 protected:
