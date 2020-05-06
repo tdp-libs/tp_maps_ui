@@ -50,6 +50,7 @@ struct Widget::Private
   bool visible{true};
   bool transparentToMouseEvents{false};
   bool hasFocus{false};
+  bool tabFocus{false};
 
   bool calculateGeometry{false};
 
@@ -383,6 +384,18 @@ bool Widget::hasFocus() const
 }
 
 //##################################################################################################
+bool Widget::tabFocus() const
+{
+  return d->tabFocus;
+}
+
+//##################################################################################################
+void Widget::setTabFocus(bool tabFocus)
+{
+  d->tabFocus = tabFocus;
+}
+
+//##################################################################################################
 LayoutParams* Widget::layoutParams()
 {
   return d->layoutParams;
@@ -529,6 +542,38 @@ bool Widget::keyEventInternal(const tp_maps::KeyEvent& event)
   for(auto i=d->children.rbegin(); i!=d->children.rend(); ++i)
     if((*i)->keyEventInternal(event))
       return true;
+
+  return false;
+}
+//##################################################################################################
+bool Widget::tabNext()
+{
+  bool focusFound=false;
+  for(auto i : d->children)
+  {
+    if(focusFound)
+    {
+      if(i->tabFocus())
+      {
+        i->focus();
+        return true;
+      }
+    }
+    else
+    {
+      if(i->hasFocus())
+      {
+        focusFound = true;
+      }
+    }
+  }
+
+  if(!focusFound)
+  {
+    for(auto i=d->children.rbegin(); i!=d->children.rend(); ++i)
+      if((*i)->tabNext())
+        return true;
+  }
 
   return false;
 }

@@ -145,6 +145,13 @@ public:
   bool hasFocus() const;
 
   //################################################################################################
+  //! Returns true if the widget wants to be included in the tab order.
+  bool tabFocus() const;
+
+  //################################################################################################
+  void setTabFocus(bool tabFocus);
+
+  //################################################################################################
   //! Used by layout classes to store information about widgets that they layout
   template<typename T, typename... Args>
   T* layoutParams(Args&&... args)
@@ -240,6 +247,9 @@ private:
 
   //################################################################################################
   bool keyEventInternal(const tp_maps::KeyEvent& event);
+
+  //################################################################################################
+  bool tabNext();
 
   //################################################################################################
   bool textEditingEventInternal(const tp_maps::TextEditingEvent& event);

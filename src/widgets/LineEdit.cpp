@@ -42,7 +42,7 @@ LineEdit::LineEdit(Widget* parent):
   Widget(parent),
   d(new Private())
 {
-
+  setTabFocus(true);
 }
 
 //##################################################################################################
@@ -113,13 +113,13 @@ void LineEdit::render(tp_maps::RenderInfo& renderInfo)
     auto color = drawHelper()->textColor(BoxType::Raised, FillType::Button, d->currentVisualModifier);
 
     shader->use();
-    shader->setMatrix(glm::translate(m, {width()/2.0f, height()/1.55f, 0.0f}));
+    shader->setMatrix(glm::translate(m, {width()/2.0f, height()/2.0f, 0.0f}));
     shader->setColor(color);
     shader->drawPreparedString(*d->preparedString.get());
   }
 
   //Draw the placeholder text.
-  if(font() && d->text.empty() && !d->placeholderText.empty())
+  if(!hasFocus() && font() && d->text.empty() && !d->placeholderText.empty())
   {
     auto shader = layer()->map()->getShader<tp_maps::FontShader>();
     if(shader->error())
@@ -139,7 +139,7 @@ void LineEdit::render(tp_maps::RenderInfo& renderInfo)
     auto color = drawHelper()->placeholderTextColor(BoxType::Raised, FillType::Button, d->currentVisualModifier);
 
     shader->use();
-    shader->setMatrix(glm::translate(m, {width()/2.0f, height()/1.55f, 0.0f}));
+    shader->setMatrix(glm::translate(m, {width()/2.0f, height()/2.0f, 0.0f}));
     shader->setColor(color);
     shader->drawPreparedString(*d->placeholderPreparedString.get());
   }
@@ -170,6 +170,9 @@ bool LineEdit::keyEvent(const tp_maps::KeyEvent& event)
     break;
   }
 
+  case 43: //-- Tab --------------------------------------------------------------------------------
+    return false;
+
   default:
     break;
   }
@@ -195,6 +198,7 @@ bool LineEdit::textInputEvent(const tp_maps::TextInputEvent& event)
 //##################################################################################################
 void LineEdit::focusEvent(Widget* focusedWidget)
 {
+  bool previous=hasFocus();
   Widget::focusEvent(focusedWidget);
 
   if(d->hasTextEditing)
@@ -208,6 +212,9 @@ void LineEdit::focusEvent(Widget* focusedWidget)
     d->hasTextEditing = true;
     startTextInput();
   }
+
+  if(previous!=hasFocus())
+    update();
 }
 
 //##################################################################################################

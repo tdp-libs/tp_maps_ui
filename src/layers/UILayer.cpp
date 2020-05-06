@@ -4,6 +4,7 @@
 #include "tp_maps_ui/draw_helpers/DarkDrawHelper.h"
 
 #include "tp_maps/Map.h"
+#include "tp_maps/KeyEvent.h"
 
 #include "tp_utils/DebugUtils.h"
 
@@ -121,7 +122,19 @@ bool UILayer::keyEvent(const tp_maps::KeyEvent& event)
   if(!visible())
     return false;
 
-  return d->rootWidget->keyEventInternal(event);
+  if(d->rootWidget->keyEventInternal(event))
+    return true;
+
+  if(event.type == tp_maps::KeyEventType::Press)
+  {
+    switch(event.scancode)
+    {
+    case 43: //-- Tab ------------------------------------------------------------------------------
+      return d->rootWidget->tabNext();
+    }
+  }
+
+  return false;
 }
 
 //##################################################################################################
