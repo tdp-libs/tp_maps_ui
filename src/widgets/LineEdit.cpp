@@ -170,6 +170,9 @@ bool LineEdit::keyEvent(const tp_maps::KeyEvent& event)
     break;
   }
 
+  case 40: //-- Return -----------------------------------------------------------------------------
+    return false;
+
   case 43: //-- Tab --------------------------------------------------------------------------------
     return false;
 
