@@ -186,6 +186,7 @@ bool LineEdit::keyEvent(const tp_maps::KeyEvent& event)
 //##################################################################################################
 bool LineEdit::textEditingEvent(const tp_maps::TextEditingEvent& event)
 {
+  TP_UNUSED(event);
   return true;
 }
 
