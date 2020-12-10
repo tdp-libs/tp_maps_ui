@@ -25,8 +25,8 @@ struct PushButton::Private
   std::u16string text;
   std::unique_ptr<tp_maps::FontShader::PreparedString> preparedString;
 
-  tp_maps::TextureData normalImage;
-  tp_maps::TextureData pressedImage;
+  tp_image_utils::ColorMap normalImage;
+  tp_image_utils::ColorMap pressedImage;
   std::unique_ptr<tp_maps::BasicTexture> normalImageTexture;
   std::unique_ptr<tp_maps::BasicTexture> pressedImageTexture;
 
@@ -81,11 +81,8 @@ void PushButton::setText(const std::u16string& text)
 }
 
 //################################################################################################
-void PushButton::setImage(const tp_maps::TextureData& normalImage, const tp_maps::TextureData& pressedImage)
+void PushButton::setImage(const tp_image_utils::ColorMap& normalImage, const tp_image_utils::ColorMap& pressedImage)
 {
-  d->normalImage.destroy();
-  d->pressedImage.destroy();
-
   d->normalImage  = normalImage.clone2();
   d->pressedImage = pressedImage.clone2();
 
@@ -141,7 +138,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
         layer()->map()->deleteTexture(d->normalImageTextureID);
         d->normalImageTextureID = 0;
 
-        if(d->normalImage.data)
+        if(d->normalImage.size()>0)
         {
           if(!d->normalImageTexture)
             d->normalImageTexture.reset(new tp_maps::BasicTexture(layer()->map()));
@@ -156,7 +153,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
         layer()->map()->deleteTexture(d->pressedImageTextureID);
         d->pressedImageTextureID = 0;
 
-        if(d->pressedImage.data)
+        if(d->pressedImage.size()>0)
         {
           if(!d->pressedImageTexture)
             d->pressedImageTexture.reset(new tp_maps::BasicTexture(layer()->map()));
@@ -188,10 +185,10 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           glm::vec2 t = d->normalImageTexture->textureDims();
 
           std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, { t.x,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
           delete d->normalImageVertexBuffer;
@@ -203,10 +200,10 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           glm::vec2 t = d->pressedImageTexture->textureDims();
 
           std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, { t.x,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
           delete d->pressedImageVertexBuffer;

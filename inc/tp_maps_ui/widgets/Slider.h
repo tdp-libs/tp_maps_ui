@@ -4,11 +4,6 @@
 #include "tp_maps_ui/Widget.h"
 #include "tp_utils/CallbackCollection.h"
 
-namespace tp_maps
-{
-struct TextureData;
-}
-
 namespace tp_maps_ui
 {
 

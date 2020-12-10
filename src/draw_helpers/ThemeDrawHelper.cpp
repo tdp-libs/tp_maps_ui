@@ -37,14 +37,14 @@ struct TextureCoords_lt
 struct TextureBuffer_lt
 {
   TPPixel* rawData;
-  tp_maps::TextureData& textureData;
+  tp_image_utils::ColorMap& textureData;
 
   size_t cx=1;
   size_t cy=1;
   size_t rh=1;
 
   //################################################################################################
-  TextureBuffer_lt(TPPixel* rawData_, tp_maps::TextureData& textureData_):
+  TextureBuffer_lt(TPPixel* rawData_, tp_image_utils::ColorMap& textureData_):
     rawData(rawData_),
     textureData(textureData_)
   {
@@ -63,7 +63,7 @@ struct TextureBuffer_lt
     float fh = float(h);
 
     //-- Make sure we have space to draw the cell --------------------------------------------------
-    if((cx+3+w)<textureData.w && (cy+3+h)<textureData.h)
+    if((cx+3+w)<textureData.width() && (cy+3+h)<textureData.height())
     {
       x  = cx+1;
       cx = cx+3+w;
@@ -74,7 +74,7 @@ struct TextureBuffer_lt
       cx = 1;
       cy += rh+3;
       rh=1;
-      if((cx+3+w)<textureData.w && (cy+3+h)<textureData.h)
+      if((cx+3+w)<textureData.width() && (cy+3+h)<textureData.height())
       {
         x  = cx+1;
         cx = cx+3+w;
@@ -91,36 +91,36 @@ struct TextureBuffer_lt
     {
       float fy = float(yy)/fh;
       for(size_t xx=0; xx<w; xx++)
-        rawData[(x+xx)+(textureData.w*(y+yy))] = func(float(xx)/fw, fy);
+        rawData[(x+xx)+(textureData.width()*(y+yy))] = func(float(xx)/fw, fy);
     }
 
     //-- Draw the cell borders ---------------------------------------------------------------------
     {
       for(size_t xx=0; xx<w; xx++)
       {
-        rawData[(x+xx)+(textureData.w*(y-1))] = rawData[(x+xx)+(textureData.w*(y))];
-        rawData[(x+xx)+(textureData.w*(y+h))] = rawData[(x+xx)+(textureData.w*((y+h)-1))];
+        rawData[(x+xx)+(textureData.width()*(y-1))] = rawData[(x+xx)+(textureData.width()*(y))];
+        rawData[(x+xx)+(textureData.width()*(y+h))] = rawData[(x+xx)+(textureData.width()*((y+h)-1))];
       }
 
       for(size_t yy=0; yy<h; yy++)
       {
-        rawData[(x-1)+(textureData.w*(y+yy))] = rawData[(x)+(textureData.w*(y+yy))];
-        rawData[(x+w)+(textureData.w*(y+yy))] = rawData[((x+w)-1)+(textureData.w*(y+yy))];
+        rawData[(x-1)+(textureData.width()*(y+yy))] = rawData[(x)+(textureData.width()*(y+yy))];
+        rawData[(x+w)+(textureData.width()*(y+yy))] = rawData[((x+w)-1)+(textureData.width()*(y+yy))];
       }
 
-      rawData[(x-1)+(textureData.w*(y-1))] = rawData[x+(textureData.w*y)];
-      rawData[(x+w)+(textureData.w*(y-1))] = rawData[((x+w)-1)+(textureData.w*y)];
+      rawData[(x-1)+(textureData.width()*(y-1))] = rawData[x+(textureData.width()*y)];
+      rawData[(x+w)+(textureData.width()*(y-1))] = rawData[((x+w)-1)+(textureData.width()*y)];
 
-      rawData[(x-1)+(textureData.w*(y+h))] = rawData[x+(textureData.w*((y+h)-1))];
-      rawData[(x+w)+(textureData.w*(y+h))] = rawData[((x+w)-1)+(textureData.w*((y+h)-1))];
+      rawData[(x-1)+(textureData.width()*(y+h))] = rawData[x+(textureData.width()*((y+h)-1))];
+      rawData[(x+w)+(textureData.width()*(y+h))] = rawData[((x+w)-1)+(textureData.width()*((y+h)-1))];
     }
 
     //-- Calculate the texture coords --------------------------------------------------------------
     {
-      textureCoords.x0 = float((x+w)-1) / float(textureData.w);
-      textureCoords.x1 = float(x)       / float(textureData.w);
-      textureCoords.y0 = float(y)       / float(textureData.h);
-      textureCoords.y1 = float((y+h)-1) / float(textureData.h);
+      textureCoords.x0 = float((x+w)-1) / float(textureData.width());
+      textureCoords.x1 = float(x)       / float(textureData.width());
+      textureCoords.y0 = float(y)       / float(textureData.height());
+      textureCoords.y1 = float((y+h)-1) / float(textureData.height());
     }
 
     return textureCoords;
@@ -201,7 +201,7 @@ struct ThemeDrawHelper::Private
   }
 
   //################################################################################################
-  static void drawCell(TPPixel* rawData, tp_maps::TextureData& textureData, size_t x, size_t y, size_t w, size_t h, const std::function<TPPixel(float, float)>& func)
+  static void drawCell(TPPixel* rawData, tp_image_utils::ColorMap& textureData, size_t x, size_t y, size_t w, size_t h, const std::function<TPPixel(float, float)>& func)
   {
     float fw = float(w);
     float fh = float(h);
@@ -209,7 +209,7 @@ struct ThemeDrawHelper::Private
     {
       float fy = float(yy)/fh;
       for(size_t xx=0; xx<w; xx++)
-        rawData[(x+xx)+(textureData.w*(y+yy))] = func(float(xx)/fw, fy);
+        rawData[(x+xx)+(textureData.width()*(y+yy))] = func(float(xx)/fw, fy);
     }
   }
 
@@ -351,15 +351,9 @@ struct ThemeDrawHelper::Private
     texture->setMagFilterOption(GL_NEAREST);
     texture->setMinFilterOption(GL_NEAREST);
 
-    tp_maps::TextureData textureData;
-    textureData.w = 64;
-    textureData.h = 64;
+    tp_image_utils::ColorMap textureData(64, 64);
 
-    std::vector<TPPixel> pixels;
-    pixels.resize(size_t(textureData.w*textureData.h), {0, 0, 0, 0});
-    textureData.data = pixels.data();
-
-    TextureBuffer_lt textureBuffer(pixels.data(), textureData);
+    TextureBuffer_lt textureBuffer(textureData.data(), textureData);
 
     generateFrame(textureBuffer,       normalPanelFrameDetails, themeParameters.normalPanelFrame      );
     generateFrame(textureBuffer,          editableFrameDetails, themeParameters.editableFrame         );

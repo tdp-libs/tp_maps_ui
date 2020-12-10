@@ -75,6 +75,9 @@ HEADERS += inc/tp_maps_ui/widgets/Slider.h
 SOURCES += src/widgets/CollapsiblePanel.cpp
 HEADERS += inc/tp_maps_ui/widgets/CollapsiblePanel.h
 
+SOURCES += src/widgets/Image.cpp
+HEADERS += inc/tp_maps_ui/widgets/Image.h
+
 
 #-- Draw Helpers -----------------------------------------------------------------------------------
 SOURCES += src/draw_helpers/DarkDrawHelper.cpp

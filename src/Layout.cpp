@@ -12,6 +12,7 @@ struct Layout::Private
   Private() = default;
 
   Widget* parent{nullptr};
+  std::vector<Widget*> orphans;
 
   Margins contentsMargins;
 };
@@ -27,6 +28,7 @@ Layout::Layout(Widget* parent):
 //##################################################################################################
 Layout::~Layout()
 {
+  tpDeleteAll(d->orphans);
   delete d;
 }
 
@@ -61,6 +63,21 @@ const Margins& Layout::contentsMargins() const
 void Layout::setParent(Widget* parent)
 {
   d->parent = parent;
+  if(d->parent)
+  {
+    for(auto orphan : d->orphans)
+      d->parent->addWidget(orphan);
+    d->orphans.clear();
+  }
+}
+//##################################################################################################
+void Layout::addChildWidget(Widget* child)
+{
+  if(d->parent)
+    d->parent->addWidget(child);
+  else
+    d->orphans.push_back(child);
+
 }
 
 }

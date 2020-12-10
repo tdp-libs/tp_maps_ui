@@ -1,45 +1,45 @@
-#ifndef tp_maps_ui_Layout_h
-#define tp_maps_ui_Layout_h
+#ifndef tp_maps_ui_Image_h
+#define tp_maps_ui_Image_h
 
-#include "tp_maps_ui/Globals.h"
+#include "tp_maps_ui/Widget.h"
+#include "tp_utils/CallbackCollection.h"
+
+namespace tp_image_utils
+{
+class ColorMap;
+}
 
 namespace tp_maps_ui
 {
-class Widget;
 
 //##################################################################################################
-class TP_MAPS_UI_SHARED_EXPORT Layout
+class TP_MAPS_UI_SHARED_EXPORT Image : public Widget
 {
-  friend class Widget;
 public:
   //################################################################################################
-  Layout(Widget* parent=nullptr);
+  Image(Widget* parent=nullptr);
 
   //################################################################################################
-  virtual ~Layout();
+  ~Image() override;
 
   //################################################################################################
-  Widget* parent() const;
+  void setImage(const tp_image_utils::ColorMap& image);
 
   //################################################################################################
-  virtual std::pair<Dim, Dim> sizeHint() const;
-
-  //################################################################################################
-  void setContentsMargins(const Dim& left, const Dim& top, const Dim& right, const Dim& bottom);
-
-  //################################################################################################
-  const Margins& contentsMargins() const;
-
-  //################################################################################################
-  virtual void updateLayout() = 0;
-
-private:
-  //################################################################################################
-  void setParent(Widget* parent);
+  tp_utils::CallbackCollection<void()> clicked;
 
 protected:
   //################################################################################################
-  void addChildWidget(Widget* child);
+  void render(tp_maps::RenderInfo& renderInfo) override;
+
+  //################################################################################################
+  void invalidateBuffers() override;
+
+  //################################################################################################
+  bool mouseEvent(const tp_maps::MouseEvent& event) override;
+
+  //################################################################################################
+  void animate(double timestampMS) override;
 
 private:
   struct Private;

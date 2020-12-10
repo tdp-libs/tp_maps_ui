@@ -184,14 +184,8 @@ void BoxLayout::updateLayout()
 //################################################################################################
 void BoxLayout::addWidget(Widget* widget, const Dim& fraction, float stretch)
 {
-  if(!parent())
-  {
-    tpWarning() << "BoxLayout::addWidget() Error! Add widgets to a layout after adding it to a widget!";
-    return;
-  }
   widget->layoutParams<LayoutParams_lt>(fraction, stretch);
-
-  parent()->addWidget(widget);
+  addChildWidget(widget);
 }
 
 //##################################################################################################
@@ -205,15 +199,13 @@ void BoxLayout::addLayout(Layout* layout, const Dim& fraction, float stretch)
 //##################################################################################################
 void BoxLayout::addStretch(float stretch)
 {
-  auto widget = new Widget();
-  addWidget(widget, Dim::full(), stretch);
+  addWidget(new Widget(), Dim::full(), stretch);
 }
 
 //##################################################################################################
 void BoxLayout::addSpacing(const Dim& spacing)
 {
-  auto widget = new Spacing(spacing);
-  addWidget(widget);
+  addWidget(new Spacing(spacing));
 }
 
 //##################################################################################################

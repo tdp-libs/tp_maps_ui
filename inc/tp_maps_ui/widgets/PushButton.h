@@ -4,9 +4,9 @@
 #include "tp_maps_ui/Widget.h"
 #include "tp_utils/CallbackCollection.h"
 
-namespace tp_maps
+namespace tp_image_utils
 {
-struct TextureData;
+class ColorMap;
 }
 
 namespace tp_maps_ui
@@ -32,7 +32,7 @@ public:
   void setText(const std::u16string& text);
 
   //################################################################################################
-  void setImage(const tp_maps::TextureData& normalImage, const tp_maps::TextureData& pressedImage);
+  void setImage(const tp_image_utils::ColorMap& normalImage, const tp_image_utils::ColorMap& pressedImage);
 
   //################################################################################################
   tp_utils::CallbackCollection<void()> clicked;
