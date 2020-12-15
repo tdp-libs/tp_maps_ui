@@ -389,7 +389,7 @@ struct ThemeDrawHelper::Private
     if(!textureID)
       return;
 
-    if(frame.updateVertexBuffer)
+    if(!frame.vertexBuffer || frame.updateVertexBuffer)
     {
       delete frame.vertexBuffer;
       frame.vertexBuffer = shader->generateVertexBuffer(q->map(), frame.indexes, frame.verts);
@@ -405,7 +405,7 @@ struct ThemeDrawHelper::Private
   }
 
 
-  //##################################################################################################
+  //################################################################################################
   FrameDetails_lt& selectFrameDetails(BoxType boxType, FillType fillType, VisualModifier visualModifier)
   {
     TP_UNUSED(boxType);
@@ -500,8 +500,14 @@ void ThemeDrawHelper::invalidateBuffers()
   DrawHelper::invalidateBuffers();
 
   d->deleteVertexBuffers();
-  d->raisedButtonFrameDetails.updateVertexBuffer=true;
-  d->sunkenButtonFrameDetails.updateVertexBuffer=true;
+  d->normalPanelFrameDetails      .updateVertexBuffer = true;
+  d->editableFrameDetails         .updateVertexBuffer = true;
+  d->raisedButtonFrameDetails     .updateVertexBuffer = true;
+  d->sunkenButtonFrameDetails     .updateVertexBuffer = true;
+  d->checkedCheckBoxFrameDetails  .updateVertexBuffer = true;
+  d->uncheckedCheckBoxFrameDetails.updateVertexBuffer = true;
+  d->overlayFrameDetails          .updateVertexBuffer = true;
+
   d->textureID = 0;
   d->bindBeforeRender = true;
 }
