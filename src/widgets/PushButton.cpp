@@ -185,10 +185,10 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           glm::vec2 t = d->normalImageTexture->textureDims();
 
           std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.0f,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.0f, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
           delete d->normalImageVertexBuffer;
@@ -200,10 +200,10 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           glm::vec2 t = d->pressedImageTexture->textureDims();
 
           std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.0f,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.0f, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
           delete d->pressedImageVertexBuffer;
