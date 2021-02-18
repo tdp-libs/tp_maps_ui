@@ -57,14 +57,14 @@ HEADERS += inc/tp_maps_ui/widgets/TreeWidget.h
 SOURCES += src/widgets/Label.cpp
 HEADERS += inc/tp_maps_ui/widgets/Label.h
 
-SOURCES += src/widgets/TabBar.cpp
-HEADERS += inc/tp_maps_ui/widgets/TabBar.h
+#SOURCES += src/widgets/TabBar.cpp
+#HEADERS += inc/tp_maps_ui/widgets/TabBar.h
 
-SOURCES += src/widgets/TabPanel.cpp
-HEADERS += inc/tp_maps_ui/widgets/TabPanel.h
+#SOURCES += src/widgets/TabPanel.cpp
+#HEADERS += inc/tp_maps_ui/widgets/TabPanel.h
 
-SOURCES += src/widgets/TabWidget.cpp
-HEADERS += inc/tp_maps_ui/widgets/TabWidget.h
+#SOURCES += src/widgets/TabWidget.cpp
+#HEADERS += inc/tp_maps_ui/widgets/TabWidget.h
 
 SOURCES += src/widgets/FPSLabel.cpp
 HEADERS += inc/tp_maps_ui/widgets/FPSLabel.h
