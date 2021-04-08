@@ -46,6 +46,7 @@ Image::Image(Widget* parent):
 //##################################################################################################
 Image::~Image()
 {
+  delete d->imageVertexBuffer;
   delete d;
 }
 
