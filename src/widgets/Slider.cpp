@@ -100,9 +100,6 @@ void Slider::render(tp_maps::RenderInfo& renderInfo)
   {
     //Draw the button background.
     //drawHelper()->drawBox(m, width(), height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
-
-
-
     {
       int trackLength = int(std::lround(width())) - (2*int(d->margin));
 
@@ -139,6 +136,7 @@ bool Slider::mouseEvent(const tp_maps::MouseEvent& event)
   case tp_maps::MouseEventType::Press:
   {
     d->currentVisualModifier = VisualModifier::Pressed;
+    focus();
     update();
     return true;
   }

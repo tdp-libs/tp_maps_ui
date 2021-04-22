@@ -424,16 +424,19 @@ void Widget::invalidateBuffers()
 bool Widget::mouseEvent(const tp_maps::MouseEvent& event)
 {
   if(event.type == tp_maps::MouseEventType::Press)
+  {
     focus();
+    return true;
+  }
 
-  return true;
+  return false;
 }
 
 //##################################################################################################
 bool Widget::keyEvent(const tp_maps::KeyEvent& event)
 {
   TP_UNUSED(event);
-  return true;
+  return false;
 }
 
 //##################################################################################################
