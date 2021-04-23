@@ -35,7 +35,8 @@ enum class FillType
   Radio,    //!< Style of radio buttons.
   Editable, //!< An editable panel like a text box or spin box.
   Panel,    //!< A raised floading panel.
-  Float     //!< For example the white panel that appears below a combo box, or a tooltip.
+  Float,    //!< For example the white panel that appears below a combo box, or a tooltip.
+  Slider    //!< Slider handle.
 };
 
 //##################################################################################################
@@ -53,10 +54,10 @@ enum class VisualModifier : size_t
 //##################################################################################################
 struct BoxParams
 {
-  float marginLeft{0};
-  float marginRight{0};
-  float marginTop{0};
-  float marginBottom{0};
+  float marginLeft     {0.0f};
+  float marginRight    {0.0f};
+  float marginTop      {0.0f};
+  float marginBottom   {0.0f};
 };
 
 //##################################################################################################
@@ -93,6 +94,9 @@ public:
   //################################################################################################
   const BoxParams& boxParams(BoxType boxType) const;
 
+  //################################################################################################
+  const glm::vec2& recommendedSize(FillType fillType) const;
+
 protected:
   //################################################################################################
   //! Called when buffers become invalid.
@@ -109,6 +113,9 @@ protected:
   \param boxParams The geometry details for this type of box.
   */
   void setBoxParams(BoxType boxType, const BoxParams& boxParams);
+
+  //################################################################################################
+  void setRecommendedSize(FillType fillType, const glm::vec2& recommendedSize);
 
 private:
   struct Private;

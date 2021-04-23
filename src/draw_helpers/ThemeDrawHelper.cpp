@@ -5,6 +5,8 @@
 #include "tp_maps/shaders/FrameShader.h"
 #include "tp_maps/textures/BasicTexture.h"
 
+#include "tp_image_utils/SaveImages.h"
+
 namespace tp_maps_ui
 {
 
@@ -86,6 +88,9 @@ struct TextureBuffer_lt
       }
     }
 
+    if(h>rh)
+      rh = h;
+
     //-- Draw the cell -----------------------------------------------------------------------------
     for(size_t yy=0; yy<h; yy++)
     {
@@ -117,10 +122,10 @@ struct TextureBuffer_lt
 
     //-- Calculate the texture coords --------------------------------------------------------------
     {
-      textureCoords.x0 = float((x+w)-1) / float(textureData.width());
-      textureCoords.x1 = float(x)       / float(textureData.width());
-      textureCoords.y0 = float(y)       / float(textureData.height());
-      textureCoords.y1 = float((y+h)-1) / float(textureData.height());
+      textureCoords.x0 = float((x+w)) / float(textureData.width());
+      textureCoords.x1 = float(x)     / float(textureData.width());
+      textureCoords.y0 = float(y)     / float(textureData.height());
+      textureCoords.y1 = float((y+h)) / float(textureData.height());
     }
 
     return textureCoords;
@@ -144,6 +149,9 @@ struct ThemeDrawHelper::Private
   FrameDetails_lt sunkenButtonFrameDetails;
   FrameDetails_lt checkedCheckBoxFrameDetails;
   FrameDetails_lt uncheckedCheckBoxFrameDetails;
+
+  FrameDetails_lt raisedHandleFrameDetails;
+  FrameDetails_lt sunkenHandleFrameDetails;
 
   FrameDetails_lt overlayFrameDetails;
 
@@ -198,6 +206,12 @@ struct ThemeDrawHelper::Private
 
     delete overlayFrameDetails.vertexBuffer;
     overlayFrameDetails.vertexBuffer=nullptr;
+
+    delete raisedHandleFrameDetails.vertexBuffer;
+    raisedHandleFrameDetails.vertexBuffer=nullptr;
+
+    delete sunkenHandleFrameDetails.vertexBuffer;
+    sunkenHandleFrameDetails.vertexBuffer=nullptr;
   }
 
   //################################################################################################
@@ -226,8 +240,8 @@ struct ThemeDrawHelper::Private
     frame.placeholderTextColor.z = float(colors.placeholderTextColor.b)/255.0f;
     frame.placeholderTextColor.w = float(colors.placeholderTextColor.a)/255.0f;
 
-    size_t borderSize = 1;
-    size_t centerSize = 1;
+    size_t borderSize = colors.borderSize;
+    size_t centerSize = 10;
 
     float borderSizeF = float(borderSize);
 
@@ -239,17 +253,73 @@ struct ThemeDrawHelper::Private
     size_t centerRowH = centerSize;
     size_t bottomRowH = borderSize;
 
-    auto ttl = textureBuffer.drawCell(  leftColumnW,    topRowH, [&](float, float){return colors.tl;});
-    auto ttc = textureBuffer.drawCell(centerColumnW,    topRowH, [&](float, float){return colors.t; });
-    auto ttr = textureBuffer.drawCell( rightColumnW,    topRowH, [&](float, float){return colors.tr;});
 
-    auto tcl = textureBuffer.drawCell(  leftColumnW, centerRowH, [&](float, float){return colors.l; });
-    auto tcc = textureBuffer.drawCell(centerColumnW, centerRowH, [&](float, float){return colors.c; });
-    auto tcr = textureBuffer.drawCell( rightColumnW, centerRowH, [&](float, float){return colors.r; });
+    TextureCoords_lt ttl;
+    TextureCoords_lt ttc;
+    TextureCoords_lt ttr;
 
-    auto tbl = textureBuffer.drawCell(  leftColumnW, bottomRowH, [&](float, float){return colors.bl;});
-    auto tbc = textureBuffer.drawCell(centerColumnW, bottomRowH, [&](float, float){return colors.b; });
-    auto tbr = textureBuffer.drawCell( rightColumnW, bottomRowH, [&](float, float){return colors.br;});
+    TextureCoords_lt tcl;
+    TextureCoords_lt tcc;
+    TextureCoords_lt tcr;
+
+    TextureCoords_lt tbl;
+    TextureCoords_lt tbc;
+    TextureCoords_lt tbr;
+
+    switch(colors.drawMode)
+    {
+    case FrameDrawMode::Square: //------------------------------------------------------------------
+    {
+      ttl = textureBuffer.drawCell(  leftColumnW,    topRowH, [&](float, float){return colors.tl;});
+      ttc = textureBuffer.drawCell(centerColumnW,    topRowH, [&](float, float){return colors.t; });
+      ttr = textureBuffer.drawCell( rightColumnW,    topRowH, [&](float, float){return colors.tr;});
+
+      tcl = textureBuffer.drawCell(  leftColumnW, centerRowH, [&](float, float){return colors.l; });
+      tcc = textureBuffer.drawCell(centerColumnW, centerRowH, [&](float, float){return colors.c; });
+      tcr = textureBuffer.drawCell( rightColumnW, centerRowH, [&](float, float){return colors.r; });
+
+      tbl = textureBuffer.drawCell(  leftColumnW, bottomRowH, [&](float, float){return colors.bl;});
+      tbc = textureBuffer.drawCell(centerColumnW, bottomRowH, [&](float, float){return colors.b; });
+      tbr = textureBuffer.drawCell( rightColumnW, bottomRowH, [&](float, float){return colors.br;});
+
+      break;
+    }
+
+    case FrameDrawMode::Rounded: //-----------------------------------------------------------------
+    {
+      auto drawRadius = [&](const TPPixel& c, float fx, float fy)
+      {
+        return [=](float x, float y)
+        {
+          x = fx-x;
+          y = fy-y;
+
+          float a = 1.0f;
+          float l=std::sqrt(x*x + y*y);
+          if(l>0.8f)
+            a = std::clamp(1.0f - (l-0.8f)*5, 0.0f, 1.0f);
+
+          a = a*a*255.0f;
+
+          return TPPixel(c.r, c.g, c.b, uint8_t(a));
+        };
+      };
+
+      ttl = textureBuffer.drawCell(  leftColumnW,    topRowH, drawRadius(colors.tl, 0.0f, 1.0f));
+      ttc = textureBuffer.drawCell(centerColumnW,    topRowH, [&](float, float){return colors.t; });
+      ttr = textureBuffer.drawCell( rightColumnW,    topRowH, drawRadius(colors.tr, 1.0f, 1.0f));
+
+      tcl = textureBuffer.drawCell(  leftColumnW, centerRowH, [&](float, float){return colors.l; });
+      tcc = textureBuffer.drawCell(centerColumnW, centerRowH, [&](float, float){return colors.c; });
+      tcr = textureBuffer.drawCell( rightColumnW, centerRowH, [&](float, float){return colors.r; });
+
+      tbl = textureBuffer.drawCell(  leftColumnW, bottomRowH, drawRadius(colors.bl, 0.0f, 0.0f));
+      tbc = textureBuffer.drawCell(centerColumnW, bottomRowH, [&](float, float){return colors.b; });
+      tbr = textureBuffer.drawCell( rightColumnW, bottomRowH, drawRadius(colors.br, 1.0f, 0.0f));
+
+      break;
+    }
+    }
 
     frame.verts.clear();
     frame.indexes.clear();
@@ -316,6 +386,8 @@ struct ThemeDrawHelper::Private
 
     std::reverse(frame.indexes.begin(), frame.indexes.end());
 #endif
+
+
   }
 
   //################################################################################################
@@ -351,7 +423,7 @@ struct ThemeDrawHelper::Private
     texture->setMagFilterOption(GL_NEAREST);
     texture->setMinFilterOption(GL_NEAREST);
 
-    tp_image_utils::ColorMap textureData(64, 64);
+    tp_image_utils::ColorMap textureData(512, 512);
 
     TextureBuffer_lt textureBuffer(textureData.data(), textureData);
 
@@ -361,8 +433,16 @@ struct ThemeDrawHelper::Private
     generateFrame(textureBuffer,      sunkenButtonFrameDetails, themeParameters.sunkenButtonFrame     );
     generateFrame(textureBuffer,   checkedCheckBoxFrameDetails, themeParameters.checkedCheckBoxFrame  );
     generateFrame(textureBuffer, uncheckedCheckBoxFrameDetails, themeParameters.uncheckedCheckBoxFrame);
+    generateFrame(textureBuffer,      raisedHandleFrameDetails, themeParameters.raisedHandleFrame     );
+    generateFrame(textureBuffer,      sunkenHandleFrameDetails, themeParameters.sunkenHandleFrame     );
 
     generateOverlay(textureBuffer, overlayFrameDetails, themeParameters.overlay);
+
+    q->setRecommendedSize(FillType::CheckBox, themeParameters.checkedCheckBoxFrame.recommendedSize);
+    q->setRecommendedSize(FillType::Slider  , themeParameters.   raisedHandleFrame.recommendedSize);
+
+    if(!themeParameters.debugToFile.empty())
+      tp_image_utils::saveImage(themeParameters.debugToFile, textureData);
 
     texture->setImage(textureData);
   }
@@ -430,6 +510,17 @@ struct ThemeDrawHelper::Private
     case FillType::Panel:
     {
       return normalPanelFrameDetails;
+    }
+    case FillType::Slider:
+    {
+      switch(visualModifier)
+      {
+      case VisualModifier::Pressed:
+        return sunkenHandleFrameDetails;
+
+      default:
+        return raisedHandleFrameDetails;
+      }
     }
     default:
     {

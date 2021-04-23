@@ -31,9 +31,9 @@ struct Slider::Private
   int64_t max{100};
   int64_t value{50};
 
-  int64_t margin{10};
-  int64_t handleWidth{14};
-  int64_t trackHeight{5};
+  int64_t margin{16};
+  int64_t handleWidth{32};//{14};
+  int64_t trackHeight{6};
 };
 
 //##################################################################################################
@@ -113,9 +113,16 @@ void Slider::render(tp_maps::RenderInfo& renderInfo)
       }
 
       {
-        int position = int(std::lround(float(trackLength)*f)) + int(d->margin)-(int(d->handleWidth)/2);
-        auto mm = glm::translate(m, {float(position), 0.0f, 0.0f});
-        drawHelper()->drawBox(mm, float(d->handleWidth), height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
+        glm::vec2 size = drawHelper()->recommendedSize(FillType::Slider);
+
+        if(size.x<1.0f)size.x = 14.0f;
+        if(size.y<1.0f)size.y = 14.0f;
+
+        int xPos = int(std::lround(float(trackLength)*f)) + int(d->margin)-(int(size.x)/2);
+        int yPos = (int(height()) - int(size.y))/2;
+
+        auto mm = glm::translate(m, {float(xPos), float(yPos), 0.0f});
+        drawHelper()->drawBox(mm, size.x, size.y, BoxType::Raised, FillType::Slider, d->currentVisualModifier);
       }
     }
   }

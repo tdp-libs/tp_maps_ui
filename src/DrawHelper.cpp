@@ -13,7 +13,11 @@ struct DrawHelper::Private
   UILayer* layer;
 
   BoxParams defaultBoxParams;
-  std::unordered_map<BoxType, BoxParams> boxParams;
+  std::unordered_map<BoxType, BoxParams> boxParams;  
+
+  glm::vec2 defaultRecommendedSize{0.0f, 0.0f};
+  std::unordered_map<FillType, glm::vec2> recommendedSizes;
+
   bool defaultSet{false};
 
   //################################################################################################
@@ -58,6 +62,13 @@ const BoxParams& DrawHelper::boxParams(BoxType boxType) const
 }
 
 //##################################################################################################
+const glm::vec2& DrawHelper::recommendedSize(FillType fillType) const
+{
+  auto i = d->recommendedSizes.find(fillType);
+  return (i!=d->recommendedSizes.end())?i->second:d->defaultRecommendedSize;
+}
+
+//##################################################################################################
 void DrawHelper::invalidateBuffers()
 {
 
@@ -72,6 +83,12 @@ void DrawHelper::setBoxParams(BoxType boxType, const BoxParams& boxParams)
     d->defaultSet = true;
     d->defaultBoxParams = boxParams;
   }
+}
+
+//##################################################################################################
+void DrawHelper::setRecommendedSize(FillType fillType, const glm::vec2& recommendedSize)
+{
+  d->recommendedSizes[fillType] = recommendedSize;
 }
 
 }

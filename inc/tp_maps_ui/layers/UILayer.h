@@ -46,7 +46,7 @@ public:
   //! Set the draw helper that will be used to render graphical elements of the widget
   /*!
   \note This does not take ownership.
-  \param drawHelper The font to use for drawing text on this widget.
+  \param drawHelper The draw helper used to draw backgrounds, frames, and buttons.
   */
   void setDrawHelper(DrawHelper* drawHelper);
 
