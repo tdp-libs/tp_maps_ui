@@ -63,6 +63,7 @@ struct BoxParams
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT DrawHelper
 {
+  TP_NONCOPYABLE(DrawHelper);
   friend class UILayer;
 public:
   //################################################################################################

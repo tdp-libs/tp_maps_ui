@@ -24,13 +24,16 @@ class DrawHelper;
 //##################################################################################################
 class LayoutParams
 {
+  TP_NONCOPYABLE(LayoutParams);
 public:
+  LayoutParams()=default;
   virtual ~LayoutParams();
 };
 
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT Widget
 {
+  TP_NONCOPYABLE(Widget);
   friend class UILayer;
 public:
   //################################################################################################
