@@ -133,7 +133,7 @@ void Label::render(tp_maps::RenderInfo& renderInfo)
       case HAlignment::Right:  config.relativeOffset.x = -1.0f; break;
       };
 
-      d->preparedString.reset(new tp_maps::FontShader::PreparedString(shader, font(), d->text, config));
+      d->preparedString.reset(new tp_maps::FontShader::PreparedString(font(), d->text, config));
     }
 
     if(!d->preparedString)
@@ -160,6 +160,8 @@ void Label::render(tp_maps::RenderInfo& renderInfo)
 //##################################################################################################
 void Label::invalidateBuffers()
 {
+  if(d->preparedString)
+    d->preparedString->invalidateBuffers();
   Widget::invalidateBuffers();
 }
 

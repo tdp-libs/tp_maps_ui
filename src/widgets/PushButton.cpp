@@ -113,7 +113,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
     {
       tp_maps::PreparedStringConfig config;
       config.topDown = true;
-      d->preparedString.reset(new tp_maps::FontShader::PreparedString(shader, font(), d->text, config));
+      d->preparedString.reset(new tp_maps::FontShader::PreparedString(font(), d->text, config));
     }
 
     if(!d->preparedString)

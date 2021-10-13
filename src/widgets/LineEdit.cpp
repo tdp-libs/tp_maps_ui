@@ -104,7 +104,7 @@ void LineEdit::render(tp_maps::RenderInfo& renderInfo)
       d->regenerateText = false;
       tp_maps::PreparedStringConfig config;
       config.topDown = true;
-      d->preparedString.reset(new tp_maps::FontShader::PreparedString(shader, font(), d->text, config));
+      d->preparedString.reset(new tp_maps::FontShader::PreparedString(font(), d->text, config));
     }
 
     if(!d->preparedString)
@@ -130,7 +130,7 @@ void LineEdit::render(tp_maps::RenderInfo& renderInfo)
       d->regeneratePlaceholderText = false;
       tp_maps::PreparedStringConfig config;
       config.topDown = true;
-      d->placeholderPreparedString.reset(new tp_maps::FontShader::PreparedString(shader, font(), d->placeholderText, config));
+      d->placeholderPreparedString.reset(new tp_maps::FontShader::PreparedString(font(), d->placeholderText, config));
     }
 
     if(!d->placeholderPreparedString)
