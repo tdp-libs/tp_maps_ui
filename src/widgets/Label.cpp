@@ -77,6 +77,13 @@ void Label::setText(const std::u16string& text)
 }
 
 //##################################################################################################
+void Label::setTextNoUpdate(const std::u16string& text)
+{
+  d->text = text;
+  d->regenerateText = true;
+}
+
+//##################################################################################################
 void Label::setHAlignment(HAlignment hAlignment)
 {
   d->hAlignment = hAlignment;

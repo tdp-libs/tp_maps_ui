@@ -51,7 +51,7 @@ void FPSLabel::render(tp_maps::RenderInfo& renderInfo)
       fps = fps / first;
 
     std::string str = "FPS: " + std::to_string(fps);
-    setText(tpFromUTF8(str));
+    setTextNoUpdate(tpFromUTF8(str));
   }
 
   Label::render(renderInfo);
