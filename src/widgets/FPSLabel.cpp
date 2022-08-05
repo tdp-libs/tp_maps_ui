@@ -1,6 +1,7 @@
 #include "tp_maps_ui/widgets/FPSLabel.h"
 
 #include "tp_utils/TimeUtils.h"
+#include "tp_utils/RefCount.h"
 
 #include <queue>
 

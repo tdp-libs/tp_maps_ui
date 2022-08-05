@@ -1,6 +1,8 @@
 #include "tp_maps_ui/Layout.h"
 #include "tp_maps_ui/Widget.h"
 
+#include "tp_utils/RefCount.h"
+
 namespace tp_maps_ui
 {
 

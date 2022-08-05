@@ -2,9 +2,8 @@
 #include "tp_maps_ui/widgets/PushButton.h"
 #include "tp_maps_ui/layouts/FixedLayout.h"
 #include "tp_maps_ui/layouts/SubWindowLayout.h"
-#include "tp_maps_ui/layers/UILayer.h"
 
-#include "tp_utils/DebugUtils.h"
+#include "tp_utils/RefCount.h"
 
 #include <memory>
 

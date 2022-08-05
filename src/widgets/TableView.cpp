@@ -1,5 +1,7 @@
 #include "tp_maps_ui/widgets/TableView.h"
 
+#include "tp_utils/RefCount.h"
+
 namespace tp_maps_ui
 {
 

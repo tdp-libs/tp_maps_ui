@@ -1,8 +1,8 @@
 #include "tp_maps_ui/layouts/SubWindowLayout.h"
-#include "tp_maps_ui/layers/UILayer.h"
 #include "tp_maps_ui/Widget.h"
 
 #include "tp_utils/DebugUtils.h"
+#include "tp_utils/RefCount.h"
 
 namespace tp_maps_ui
 {
