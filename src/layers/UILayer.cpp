@@ -85,7 +85,7 @@ DrawHelper* UILayer::drawHelper() const
 //##################################################################################################
 void UILayer::render(tp_maps::RenderInfo& renderInfo)
 {
-  if(renderInfo.pass != defaultRenderPass())
+  if(renderInfo.pass != defaultRenderPass().type)
     return;
 
   if(d->width != map()->width() || d->height != map()->height())
