@@ -498,6 +498,7 @@ void Widget::renderInternal(tp_maps::RenderInfo& renderInfo)
 
   d->updateGeometry();
   glScissor(d->scissorX*s, d->scissorY*s, d->scissorW*s, d->scissorH*s);
+  glDisable(GL_SCISSOR_TEST);
   render(renderInfo);
 
   for(auto child : d->children)
