@@ -1,6 +1,7 @@
 #include "tp_maps_ui/Widget.h"
 #include "tp_maps_ui/Layout.h"
 #include "tp_maps_ui/layers/UILayer.h"
+#include "tp_maps_ui/widgets/PushButton.h"
 
 #include "tp_maps/Map.h"
 #include "tp_maps/RenderInfo.h"
@@ -498,7 +499,7 @@ void Widget::renderInternal(tp_maps::RenderInfo& renderInfo)
 
   d->updateGeometry();
   glScissor(d->scissorX*s, d->scissorY*s, d->scissorW*s, d->scissorH*s);
-  glDisable(GL_SCISSOR_TEST);
+  //glDisable(GL_SCISSOR_TEST);
   render(renderInfo);
 
   for(auto child : d->children)
@@ -516,24 +517,30 @@ void Widget::invalidateBuffersInternal()
 //##################################################################################################
 bool Widget::mouseEventInternal(const tp_maps::MouseEvent& event)
 {
+  tpDebug() << "Widget::mouseEventInternal A " << bool(dynamic_cast<PushButton*>(this));
   if(!d->visible)
     return false;
 
+  tpDebug() << "Widget::mouseEventInternal B " << bool(dynamic_cast<PushButton*>(this));
   d->updateGeometry();
 
+  tpDebug() << "Widget::mouseEventInternal C " << bool(dynamic_cast<PushButton*>(this));
   if((float(event.pos.x)+0.001f) < d->screenX                  ||
      (float(event.pos.y)+0.001f) < d->screenY                  ||
      (float(event.pos.x)-0.001f) > (d->screenX+d->screenWidth) ||
      (float(event.pos.y)-0.001f) > (d->screenY+d->screenHeight))
     return false;
 
+  tpDebug() << "Widget::mouseEventInternal D " << bool(dynamic_cast<PushButton*>(this));
   for(auto i=d->children.rbegin(); i!=d->children.rend(); ++i)
     if((*i)->mouseEventInternal(event))
       return true;
 
+  tpDebug() << "Widget::mouseEventInternal E " << bool(dynamic_cast<PushButton*>(this));
   if(d->transparentToMouseEvents)
     return false;
 
+  tpDebug() << "Widget::mouseEventInternal F " << bool(dynamic_cast<PushButton*>(this));
   return mouseEvent(event);
 }
 
