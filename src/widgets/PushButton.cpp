@@ -249,7 +249,6 @@ void PushButton::invalidateBuffers()
 //##################################################################################################
 bool PushButton::mouseEvent(const tp_maps::MouseEvent& event)
 {
-  tpDebug() << "PushButton::mouseEvent";
   switch(event.type)
   {
   case tp_maps::MouseEventType::Press:
