@@ -29,7 +29,8 @@ struct UILayer::Private
   //################################################################################################
   ~Private()
   {
-    tpDeleteAll(drawHelpers);
+    while(!drawHelpers.empty())
+      delete drawHelpers.front();
   }
 };
 
