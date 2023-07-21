@@ -8,9 +8,7 @@
 #include "tp_maps/shaders/ImageShader.h"
 #include "tp_maps/textures/BasicTexture.h"
 
-#include "tp_utils/DebugUtils.h"
-
-#include "glm/gtx/transform.hpp"
+#include "glm/gtx/transform.hpp" // IWYU pragma: keep
 
 #include <memory>
 
@@ -32,8 +30,10 @@ struct PushButton::Private
   std::unique_ptr<tp_maps::BasicTexture> normalImageTexture;
   std::unique_ptr<tp_maps::BasicTexture> pressedImageTexture;
 
-  tp_maps::ImageShader::VertexBuffer* normalImageVertexBuffer{nullptr};
-  tp_maps::ImageShader::VertexBuffer* pressedImageVertexBuffer{nullptr};
+  std::unique_ptr<tp_maps::ImageShader::VertexBuffer> normalImageVertexBuffer;
+  std::unique_ptr<tp_maps::ImageShader::VertexBuffer> pressedImageVertexBuffer;
+
+  bool drawBackground{true};
 
   //This represents the button state, normal, hover, presses, etc...
   VisualModifier currentVisualModifier{VisualModifier::Normal};
@@ -91,6 +91,19 @@ void PushButton::setImage(const tp_image_utils::ColorMap& normalImage, const tp_
   d->bindBeforeRender = true;
 }
 
+//################################################################################################
+bool PushButton::drawBackground() const
+{
+  return d->drawBackground;
+}
+
+//################################################################################################
+void PushButton::setDrawBackground(bool drawBackground)
+{
+  d->drawBackground = drawBackground;
+  update();
+}
+
 //##################################################################################################
 void PushButton::render(tp_maps::RenderInfo& renderInfo)
 {
@@ -99,13 +112,13 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
   auto m = matrix();
 
   //Draw the button background.
-  if(drawHelper())
+  if(d->drawBackground and drawHelper())
   {
     drawHelper()->drawBox(m, width(), height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
   }
 
   //Draw the text.
-  if(font() && !d->text.empty())
+  if(font() and !d->text.empty())
   {
     auto shader = layer()->map()->getShader<tp_maps::FontShader>();
     if(shader->error())
@@ -167,7 +180,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
       }
     }
 
-    if(d->normalImageTextureID>0 || d->pressedImageTextureID>0)
+    if(d->normalImageTextureID>0 or d->pressedImageTextureID>0)
     {
       tp_maps::ImageShader* shader = layer()->map()->getShader<tp_maps::ImageShader>();
       if(shader->error())
@@ -193,8 +206,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
-          delete d->normalImageVertexBuffer;
-          d->normalImageVertexBuffer = shader->generateVertexBuffer(layer()->map(), indexes, verts);
+          d->normalImageVertexBuffer.reset(shader->generateVertexBuffer(layer()->map(), indexes, verts));
         }
 
         if(d->pressedImageTextureID>0)
@@ -208,8 +220,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
           verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
-          delete d->pressedImageVertexBuffer;
-          d->pressedImageVertexBuffer = shader->generateVertexBuffer(layer()->map(), indexes, verts);
+          d->pressedImageVertexBuffer.reset(shader->generateVertexBuffer(layer()->map(), indexes, verts));
         }
       }
 
@@ -218,18 +229,18 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
 
       if(d->currentVisualModifier == VisualModifier::Pressed)
       {
-        if(d->pressedImageTextureID>0 && d->pressedImageVertexBuffer)
+        if(d->pressedImageTextureID>0 and d->pressedImageVertexBuffer)
         {
           shader->setTexture(d->pressedImageTextureID);
-          shader->draw(GL_TRIANGLE_FAN, d->pressedImageVertexBuffer, {1.0f, 1.0f, 1.0f, 1.0f});
+          shader->draw(GL_TRIANGLE_FAN, d->pressedImageVertexBuffer.get(), {1.0f, 1.0f, 1.0f, 1.0f});
         }
       }
       else
       {
-        if(d->normalImageTextureID>0 && d->normalImageVertexBuffer)
+        if(d->normalImageTextureID>0 and d->normalImageVertexBuffer)
         {
           shader->setTexture(d->normalImageTextureID);
-          shader->draw(GL_TRIANGLE_FAN, d->normalImageVertexBuffer, {1.0f, 1.0f, 1.0f,1.0f});
+          shader->draw(GL_TRIANGLE_FAN, d->normalImageVertexBuffer.get(), {1.0f, 1.0f, 1.0f,1.0f});
         }
       }
     }
@@ -255,7 +266,7 @@ bool PushButton::mouseEvent(const tp_maps::MouseEvent& event)
   {
     d->currentVisualModifier = VisualModifier::Pressed;
     update();
-    break;
+    return true;
   }
 
   case tp_maps::MouseEventType::Move:
@@ -270,21 +281,15 @@ bool PushButton::mouseEvent(const tp_maps::MouseEvent& event)
       d->currentVisualModifier = VisualModifier::Normal;
       clicked();
       update();
+      return true;
     }
     break;
   }
 
   case tp_maps::MouseEventType::Wheel:
-  {
-    break;
-  }
-
   case tp_maps::MouseEventType::DoubleClick:
-  {
-    break;
-  }
-
   case tp_maps::MouseEventType::Click:
+  case tp_maps::MouseEventType::DragStart:
   {
     break;
   }
@@ -297,6 +302,19 @@ bool PushButton::mouseEvent(const tp_maps::MouseEvent& event)
 void PushButton::animate(double timestampMS)
 {
   Widget::animate(timestampMS);
+}
+
+//##################################################################################################
+VisualModifier PushButton::currentVisualModifier() const
+{
+  return d->currentVisualModifier;
+}
+
+//##################################################################################################
+void PushButton::setCurrentVisualModifier(VisualModifier currentVisualModifier)
+{
+  d->currentVisualModifier = currentVisualModifier;
+  update();
 }
 
 }

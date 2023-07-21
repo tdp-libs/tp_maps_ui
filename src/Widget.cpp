@@ -83,7 +83,6 @@ struct Widget::Private
       {
         matrix = parent->matrix();
         matrix = glm::translate(matrix, {x, y, 0.0f});
-
         screenX = parent->screenX() + x;
         screenY = parent->screenY() + y;
         screenWidth  = tpMin(tpMax(0.0f, parent->width()  - x), width );
@@ -199,6 +198,14 @@ void Widget::addWidget(Widget* child, int index)
     d->children.push_back(child);
   else
     d->children.insert(d->children.begin()+tpBound(0, index, int(d->children.size())), child);
+  d->updateLayout();
+}
+
+//##################################################################################################
+void Widget::reinsertWidget(Widget* child, int index)
+{
+  tpRemoveOne(d->children, child);
+  d->children.insert(d->children.begin()+tpBound(0, index, int(d->children.size())), child);
   d->updateLayout();
 }
 
