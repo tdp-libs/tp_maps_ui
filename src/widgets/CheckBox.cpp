@@ -224,6 +224,11 @@ bool CheckBox::mouseEvent(const tp_maps::MouseEvent& event)
   {
     break;
   }
+
+  case tp_maps::MouseEventType::DragStart:
+  {
+    break;
+  }
   }
 
   return Widget::mouseEvent(event);

@@ -1,16 +1,9 @@
 #include "tp_maps_ui/widgets/Slider.h"
-#include "tp_maps_ui/layers/UILayer.h"
 #include "tp_maps_ui/DrawHelper.h"
 
-#include "tp_maps/Map.h"
 #include "tp_maps/MouseEvent.h"
-#include "tp_maps/shaders/FontShader.h"
-#include "tp_maps/shaders/ImageShader.h"
-#include "tp_maps/textures/BasicTexture.h"
 
-#include "tp_utils/DebugUtils.h"
-
-#include "glm/gtx/transform.hpp"
+#include "glm/gtx/transform.hpp" // IWYU pragma: keep
 
 #include <memory>
 
@@ -193,6 +186,11 @@ bool Slider::mouseEvent(const tp_maps::MouseEvent& event)
   }
 
   case tp_maps::MouseEventType::Click:
+  {
+    break;
+  }
+
+  case tp_maps::MouseEventType::DragStart:
   {
     break;
   }
