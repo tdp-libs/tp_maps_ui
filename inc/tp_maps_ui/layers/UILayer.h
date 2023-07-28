@@ -22,7 +22,7 @@ class TP_MAPS_UI_SHARED_EXPORT UILayer : public tp_maps::Layer
   friend class DrawHelper;
 public:
   //################################################################################################
-  UILayer();
+  UILayer(size_t fromStage);
 
   //################################################################################################
   ~UILayer() override;
@@ -93,6 +93,9 @@ protected:
   This will unregister widget for text editing events and if required hide the keyboard.
   */
   void stopTextInput(Widget* widget);
+
+  //################################################################################################
+  void update();
 
 private:
   //################################################################################################

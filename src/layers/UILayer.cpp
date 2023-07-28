@@ -16,7 +16,8 @@ struct UILayer::Private
 {
   TP_REF_COUNT_OBJECTS("tp_maps_ui::UILayer::Private");
   TP_NONCOPYABLE(Private);
-  Private() = default;
+
+  size_t fromStage;
 
   Widget* rootWidget{nullptr};
   tp_maps::FontRenderer* font{nullptr};
@@ -27,6 +28,13 @@ struct UILayer::Private
   int height{0};
 
   //################################################################################################
+  Private(size_t fromStage_):
+    fromStage(fromStage_)
+  {
+
+  }
+
+  //################################################################################################
   ~Private()
   {
     while(!drawHelpers.empty())
@@ -35,8 +43,8 @@ struct UILayer::Private
 };
 
 //##################################################################################################
-UILayer::UILayer():
-  d(new Private())
+UILayer::UILayer(size_t fromStage):
+  d(new Private(fromStage))
 {
   d->rootWidget = new Widget();
   d->rootWidget->setLayer(this);
@@ -190,6 +198,15 @@ void UILayer::stopTextInput(Widget* widget)
   TP_UNUSED(widget);
   if(map())
     map()->stopTextInput();
+}
+
+//##################################################################################################
+void UILayer::update()
+{
+  if(d->fromStage==0)
+    tp_maps::Layer::update();
+  else
+    tp_maps::Layer::update({tp_maps::RenderFromStage::Stage, d->fromStage});
 }
 
 //##################################################################################################
