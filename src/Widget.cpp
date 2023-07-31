@@ -504,7 +504,7 @@ void Widget::renderInternal(tp_maps::RenderInfo& renderInfo)
 
   auto s=[s=layer()->map()->pixelScale()](GLint i)
   {
-    return GLint(float(i)*s+0.5f);
+    return i;//GLint(float(i)*s+0.5f);
   };
 
   d->updateGeometry();
