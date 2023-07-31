@@ -502,11 +502,13 @@ void Widget::renderInternal(tp_maps::RenderInfo& renderInfo)
   if(!d->visible)
     return;
 
-  auto s = GLint(layer()->map()->pixelScale());
+  auto s=[s=layer()->map()->pixelScale()](GLint i)
+  {
+    return GLint(float(i)*s+0.5f);
+  };
 
   d->updateGeometry();
-  glScissor(d->scissorX*s, d->scissorY*s, d->scissorW*s, d->scissorH*s);
-  //glDisable(GL_SCISSOR_TEST);
+  glScissor(s(d->scissorX), s(d->scissorY), s(d->scissorW), s(d->scissorH));
   render(renderInfo);
 
   for(auto child : d->children)
