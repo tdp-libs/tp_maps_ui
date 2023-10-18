@@ -1,6 +1,7 @@
 #include "tp_maps_ui/widgets/TableView.h"
 
 #include "tp_utils/RefCount.h"
+#include "tp_utils/TimeUtils.h"
 
 namespace tp_maps_ui
 {
@@ -131,6 +132,8 @@ void TableView::setWidgetForRowCallback(const std::function<Widget*(size_t, Widg
 //##################################################################################################
 void TableView::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("TableView::render");
+
   Widget::render(renderInfo);
 
   d->calculateVisibleRoes(height());

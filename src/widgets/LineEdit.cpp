@@ -7,7 +7,7 @@
 #include "tp_maps/KeyEvent.h"
 #include "tp_maps/shaders/FontShader.h"
 
-#include "tp_utils/DebugUtils.h"
+#include "tp_utils/TimeUtils.h"
 
 #include "glm/gtx/transform.hpp"
 
@@ -82,6 +82,8 @@ void LineEdit::setPlaceholderText(const std::u16string& placeholderText)
 //##################################################################################################
 void LineEdit::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("LineEdit::render");
+
   TP_UNUSED(renderInfo);
 
   auto m = matrix();

@@ -1,13 +1,12 @@
 #include "tp_maps_ui/Widget.h"
 #include "tp_maps_ui/Layout.h"
 #include "tp_maps_ui/layers/UILayer.h"
-#include "tp_maps_ui/widgets/PushButton.h"
 
 #include "tp_maps/Map.h"
 #include "tp_maps/RenderInfo.h"
 #include "tp_maps/MouseEvent.h"
 
-#include "tp_utils/DebugUtils.h"
+#include "tp_utils/TimeUtils.h"
 
 #include "glm/glm.hpp"
 #include "glm/ext/matrix_transform.hpp"
@@ -235,6 +234,8 @@ Layout* Widget::layout() const
 //##################################################################################################
 void Widget::setGeometry(float x, float y, float w, float h)
 {
+  TP_FUNCTION_TIME("Widget::setGeometry");
+
   d->x = x;
   d->y = y;
   d->width  = w;
@@ -499,6 +500,8 @@ void Widget::stopTextInput()
 //##################################################################################################
 void Widget::renderInternal(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("Widget::renderInternal");
+
   if(!d->visible)
     return;
 

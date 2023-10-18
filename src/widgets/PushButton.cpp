@@ -8,6 +8,8 @@
 #include "tp_maps/shaders/ImageShader.h"
 #include "tp_maps/textures/BasicTexture.h"
 
+#include "tp_utils/TimeUtils.h"
+
 #include "glm/gtx/transform.hpp" // IWYU pragma: keep
 
 #include <memory>
@@ -107,6 +109,8 @@ void PushButton::setDrawBackground(bool drawBackground)
 //##################################################################################################
 void PushButton::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("PushButton::render");
+
   TP_UNUSED(renderInfo);
 
   auto m = matrix();

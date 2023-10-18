@@ -1,12 +1,9 @@
 #include "tp_maps_ui/widgets/Overlay.h"
-#include "tp_maps_ui/layers/UILayer.h"
 #include "tp_maps_ui/DrawHelper.h"
 
-#include "tp_maps/Map.h"
 #include "tp_maps/MouseEvent.h"
-#include "tp_maps/shaders/FontShader.h"
 
-#include "tp_utils/DebugUtils.h"
+#include "tp_utils/TimeUtils.h"
 
 #include "glm/gtx/transform.hpp"
 
@@ -86,6 +83,8 @@ void Overlay::fadeAnimation(float fadeTo, float speed)
 //##################################################################################################
 void Overlay::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("Overlay::render");
+
   TP_UNUSED(renderInfo);
 
   if(!drawHelper())

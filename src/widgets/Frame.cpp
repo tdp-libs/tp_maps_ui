@@ -1,6 +1,7 @@
 #include "tp_maps_ui/widgets/Frame.h"
-#include "tp_maps_ui/layers/UILayer.h"
 #include "tp_maps_ui/DrawHelper.h"
+
+#include "tp_utils/TimeUtils.h"
 
 namespace tp_maps_ui
 {
@@ -30,6 +31,8 @@ Frame::~Frame()
 //##################################################################################################
 void Frame::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("Frame::render");
+
   TP_UNUSED(renderInfo);
 
   if(!drawHelper())

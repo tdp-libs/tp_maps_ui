@@ -1,6 +1,7 @@
 #include "tp_maps_ui/widgets/TreeWidget.h"
 
 #include "tp_utils/RefCount.h"
+#include "tp_utils/TimeUtils.h"
 
 namespace tp_maps_ui
 {
@@ -30,6 +31,8 @@ TreeWidget::~TreeWidget()
 //##################################################################################################
 void TreeWidget::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("TreeWidget::render");
+
   Widget::render(renderInfo);
 }
 

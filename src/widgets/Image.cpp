@@ -7,6 +7,8 @@
 #include "tp_maps/shaders/ImageShader.h"
 #include "tp_maps/textures/BasicTexture.h"
 
+#include "tp_utils/TimeUtils.h"
+
 #include "glm/gtx/transform.hpp"
 
 #include <memory>
@@ -61,6 +63,8 @@ void Image::setImage(const tp_image_utils::ColorMap& image)
 //##################################################################################################
 void Image::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("Image::render");
+
   TP_UNUSED(renderInfo);
 
   auto m = matrix();

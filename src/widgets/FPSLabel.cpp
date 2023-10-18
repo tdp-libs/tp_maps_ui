@@ -36,6 +36,8 @@ FPSLabel::~FPSLabel()
 //##################################################################################################
 void FPSLabel::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("FPSLabel::render");
+
   auto now = tp_utils::currentTimeMS();
 
   d->frameTimes.push(now);

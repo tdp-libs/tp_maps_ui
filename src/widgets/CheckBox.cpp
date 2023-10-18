@@ -8,6 +8,8 @@
 #include "tp_maps/FontRenderer.h"
 #include "tp_maps/shaders/FontShader.h"
 
+#include "tp_utils/TimeUtils.h"
+
 #include "glm/gtx/transform.hpp"
 
 #include <memory>
@@ -133,6 +135,8 @@ std::pair<Dim, Dim> CheckBox::sizeHint() const
 //##################################################################################################
 void CheckBox::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("CheckBox::render");
+
   TP_UNUSED(renderInfo);
 
   if(!drawHelper())

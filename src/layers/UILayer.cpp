@@ -6,7 +6,7 @@
 #include "tp_maps/Map.h"
 #include "tp_maps/KeyEvent.h"
 
-#include "tp_utils/DebugUtils.h"
+#include "tp_utils/TimeUtils.h"
 
 namespace tp_maps_ui
 {
@@ -94,6 +94,8 @@ DrawHelper* UILayer::drawHelper() const
 //##################################################################################################
 void UILayer::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("UILayer::render");
+
   if(renderInfo.pass != defaultRenderPass().type)
     return;
 

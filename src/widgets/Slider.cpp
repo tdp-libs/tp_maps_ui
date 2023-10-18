@@ -3,6 +3,8 @@
 
 #include "tp_maps/MouseEvent.h"
 
+#include "tp_utils/TimeUtils.h"
+
 #include "glm/gtx/transform.hpp" // IWYU pragma: keep
 
 #include <memory>
@@ -85,6 +87,8 @@ int64_t Slider::value() const
 //##################################################################################################
 void Slider::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("Slider::render");
+
   TP_UNUSED(renderInfo);
 
   auto m = matrix();

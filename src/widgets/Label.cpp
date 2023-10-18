@@ -8,7 +8,7 @@
 #include "tp_maps/FontRenderer.h"
 #include "tp_maps/shaders/FontShader.h"
 
-#include "tp_utils/DebugUtils.h"
+#include "tp_utils/TimeUtils.h"
 
 #include "glm/gtx/transform.hpp"
 
@@ -113,6 +113,8 @@ std::pair<Dim, Dim> Label::sizeHint() const
 //##################################################################################################
 void Label::render(tp_maps::RenderInfo& renderInfo)
 {
+  TP_FUNCTION_TIME("Label::render");
+
   TP_UNUSED(renderInfo);
 
   if(!drawHelper())
