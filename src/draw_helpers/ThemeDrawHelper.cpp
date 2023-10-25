@@ -476,7 +476,7 @@ struct ThemeDrawHelper::Private
       frame.updateVertexBuffer=false;
     }
 
-    shader->use();
+    shader->use(q->map()->renderInfo().shaderType());
     shader->setMatrix(matrix);
     shader->setScale({width, height, 1.0f});
     shader->setTexture(textureID);

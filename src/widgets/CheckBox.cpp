@@ -168,7 +168,7 @@ void CheckBox::render(tp_maps::RenderInfo& renderInfo)
 
     auto color = drawHelper()->textColor(BoxType::Raised, FillType::CheckBox, visualModifier);
 
-    shader->use();
+    shader->use(renderInfo.shaderType());
     shader->setMatrix(glm::translate(m, glm::floor(glm::vec3(width()/2.0f, height()/1.55f, 0.0f))));
     shader->setColor(color);
     shader->drawPreparedString(*d->preparedString.get());

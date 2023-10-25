@@ -150,7 +150,7 @@ void Label::render(tp_maps::RenderInfo& renderInfo)
 
     auto color = d->colorSet?d->color:drawHelper()->textColor(BoxType::Raised, FillType::Panel, VisualModifier::Normal);
 
-    shader->use();
+    shader->use(renderInfo.shaderType());
 
     float xTrans=0.0f;
     switch(d->hAlignment)

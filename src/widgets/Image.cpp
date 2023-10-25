@@ -4,7 +4,7 @@
 
 #include "tp_maps/Map.h"
 #include "tp_maps/MouseEvent.h"
-#include "tp_maps/shaders/ImageShader.h"
+#include "tp_maps/shaders/G3DImageShader.h"
 #include "tp_maps/textures/BasicTexture.h"
 
 #include "tp_utils/TimeUtils.h"
@@ -26,7 +26,7 @@ struct Image::Private
   tp_image_utils::ColorMap image;
   std::unique_ptr<tp_maps::BasicTexture> imageTexture;
 
-  tp_maps::ImageShader::VertexBuffer* imageVertexBuffer{nullptr};
+  tp_maps::G3DImageShader::VertexBuffer* imageVertexBuffer{nullptr};
 
   //This represents the button state, normal, hover, presses, etc...
   VisualModifier currentVisualModifier{VisualModifier::Normal};
@@ -94,7 +94,7 @@ void Image::render(tp_maps::RenderInfo& renderInfo)
 
     if(d->imageTextureID>0)
     {
-      tp_maps::ImageShader* shader = layer()->map()->getShader<tp_maps::ImageShader>();
+      tp_maps::G3DImageShader* shader = layer()->map()->getShader<tp_maps::G3DImageShader>();
       if(shader->error())
         return;
 
@@ -111,11 +111,11 @@ void Image::render(tp_maps::RenderInfo& renderInfo)
         {
           glm::vec2 t = d->imageTexture->textureDims();
 
-          std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
+          std::vector<tp_maps::G3DImageShader::Vertex> verts;
+          verts.push_back(tp_maps::G3DImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
           delete d->imageVertexBuffer;
@@ -123,7 +123,7 @@ void Image::render(tp_maps::RenderInfo& renderInfo)
         }
       }
 
-      shader->use();
+      shader->use(renderInfo.shaderType());
       shader->setMatrix(glm::scale(m,{width(), height(), 1.0f}));
 
       if(d->imageTextureID>0 && d->imageVertexBuffer)

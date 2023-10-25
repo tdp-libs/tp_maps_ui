@@ -5,7 +5,7 @@
 #include "tp_maps/Map.h"
 #include "tp_maps/MouseEvent.h"
 #include "tp_maps/shaders/FontShader.h"
-#include "tp_maps/shaders/ImageShader.h"
+#include "tp_maps/shaders/G3DImageShader.h"
 #include "tp_maps/textures/BasicTexture.h"
 
 #include "tp_utils/TimeUtils.h"
@@ -32,8 +32,8 @@ struct PushButton::Private
   std::unique_ptr<tp_maps::BasicTexture> normalImageTexture;
   std::unique_ptr<tp_maps::BasicTexture> pressedImageTexture;
 
-  std::unique_ptr<tp_maps::ImageShader::VertexBuffer> normalImageVertexBuffer;
-  std::unique_ptr<tp_maps::ImageShader::VertexBuffer> pressedImageVertexBuffer;
+  std::unique_ptr<tp_maps::G3DImageShader::VertexBuffer> normalImageVertexBuffer;
+  std::unique_ptr<tp_maps::G3DImageShader::VertexBuffer> pressedImageVertexBuffer;
 
   bool drawBackground{true};
 
@@ -140,7 +140,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
 
     auto color = drawHelper()->textColor(BoxType::Raised, FillType::Button, d->currentVisualModifier);
 
-    shader->use();
+    shader->use(renderInfo.shaderType());
     shader->setMatrix(glm::translate(m, glm::floor(glm::vec3(width()/2.0f, height()/2.0f, 0.0f))));
     shader->setColor(color);
     shader->drawPreparedString(*d->preparedString.get());
@@ -186,7 +186,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
 
     if(d->normalImageTextureID>0 or d->pressedImageTextureID>0)
     {
-      tp_maps::ImageShader* shader = layer()->map()->getShader<tp_maps::ImageShader>();
+      tp_maps::G3DImageShader* shader = layer()->map()->getShader<tp_maps::G3DImageShader>();
       if(shader->error())
         return;
 
@@ -203,11 +203,11 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
         {
           glm::vec2 t = d->normalImageTexture->textureDims();
 
-          std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
+          std::vector<tp_maps::G3DImageShader::Vertex> verts;
+          verts.push_back(tp_maps::G3DImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
           d->normalImageVertexBuffer.reset(shader->generateVertexBuffer(layer()->map(), indexes, verts));
@@ -217,18 +217,18 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
         {
           glm::vec2 t = d->pressedImageTexture->textureDims();
 
-          std::vector<tp_maps::ImageShader::Vertex> verts;
-          verts.push_back(tp_maps::ImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::ImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f,  t.y}));
-          verts.push_back(tp_maps::ImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
+          std::vector<tp_maps::G3DImageShader::Vertex> verts;
+          verts.push_back(tp_maps::G3DImageShader::Vertex({w,y,0.5f}, {0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({w,h,0.5f}, {0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({x,h,0.5f}, {0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({x,y,0.5f}, {0,0,1}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
           d->pressedImageVertexBuffer.reset(shader->generateVertexBuffer(layer()->map(), indexes, verts));
         }
       }
 
-      shader->use();
+      shader->use(renderInfo.shaderType());
       shader->setMatrix(glm::scale(m,{width(), height(), 1.0f}));
 
       if(d->currentVisualModifier == VisualModifier::Pressed)
