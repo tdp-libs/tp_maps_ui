@@ -161,7 +161,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
         {
           if(!d->normalImageTexture)
             d->normalImageTexture.reset(new tp_maps::BasicTexture(layer()->map()));
-          d->normalImageTexture->setImage(d->normalImage);
+          d->normalImageTexture->setImage(d->normalImage, tp_maps::NChannels::RGBA);
 
           if(d->normalImageTexture->imageReady())
             d->normalImageTextureID = d->normalImageTexture->bindTexture();
@@ -176,7 +176,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
         {
           if(!d->pressedImageTexture)
             d->pressedImageTexture.reset(new tp_maps::BasicTexture(layer()->map()));
-          d->pressedImageTexture->setImage(d->pressedImage);
+          d->pressedImageTexture->setImage(d->pressedImage, tp_maps::NChannels::RGBA);
 
           if(d->pressedImageTexture->imageReady())
             d->pressedImageTextureID = d->pressedImageTexture->bindTexture();

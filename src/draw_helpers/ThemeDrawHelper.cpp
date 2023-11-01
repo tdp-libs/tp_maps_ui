@@ -444,7 +444,7 @@ struct ThemeDrawHelper::Private
     if(!themeParameters.debugToFile.empty())
       tp_image_utils::saveImage(themeParameters.debugToFile, textureData);
 
-    texture->setImage(textureData);
+    texture->setImage(textureData, tp_maps::NChannels::RGBA);
   }
 
   //################################################################################################

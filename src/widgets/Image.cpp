@@ -84,7 +84,7 @@ void Image::render(tp_maps::RenderInfo& renderInfo)
         {
           if(!d->imageTexture)
             d->imageTexture.reset(new tp_maps::BasicTexture(layer()->map()));
-          d->imageTexture->setImage(d->image);
+          d->imageTexture->setImage(d->image, tp_maps::NChannels::RGBA);
 
           if(d->imageTexture->imageReady())
             d->imageTextureID = d->imageTexture->bindTexture();
