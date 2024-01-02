@@ -5,7 +5,7 @@
 
 #include "tp_utils/TimeUtils.h"
 
-#include "glm/gtx/transform.hpp"
+#include "glm/gtx/transform.hpp" // IWYU pragma: keep
 
 #include <memory>
 

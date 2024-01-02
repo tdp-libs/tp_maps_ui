@@ -3,13 +3,12 @@
 #include "tp_maps_ui/DrawHelper.h"
 
 #include "tp_maps/Map.h"
-#include "tp_maps/MouseEvent.h"
 #include "tp_maps/KeyEvent.h"
 #include "tp_maps/shaders/FontShader.h"
 
 #include "tp_utils/TimeUtils.h"
 
-#include "glm/gtx/transform.hpp"
+#include "glm/gtx/transform.hpp" // IWYU pragma: keep
 
 #include <memory>
 

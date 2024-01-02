@@ -1,9 +1,7 @@
 #include "tp_maps_ui/layouts/FixedLayout.h"
-#include "tp_maps_ui/layers/UILayer.h"
 #include "tp_maps_ui/Widget.h"
 
-#include "tp_maps/Map.h"
-
+#include "tp_utils/RefCount.h"
 #include "tp_utils/DebugUtils.h"
 
 namespace tp_maps_ui
