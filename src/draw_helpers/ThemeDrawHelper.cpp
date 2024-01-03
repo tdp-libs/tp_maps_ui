@@ -325,8 +325,7 @@ struct ThemeDrawHelper::Private
     frame.indexes.clear();
     frame.updateVertexBuffer = true;
 
-    glm::vec3 normal  = {0.0f, 0.0f, 1.0f};
-    glm::vec3 tangent = {1.0f, 0.0f, 0.0f};
+    glm::fquat tbnq = {0.0f, 0.0f, 0.0f, 1.0f};
 
 #if 0
     //Print out the full texture
@@ -347,10 +346,10 @@ struct ThemeDrawHelper::Private
     auto addCell = [&](float px0, float py0, float px1, float py1, float rx0, float ry0, float rx1, float ry1, const TextureCoords_lt& t)
     {
       addIndexes();
-      frame.verts.push_back(Vert({px0, py0, 0.0f}, {rx0, ry0, 0.0f}, normal, tangent, {t.x0, t.y0}));
-      frame.verts.push_back(Vert({px1, py0, 0.0f}, {rx1, ry0, 0.0f}, normal, tangent, {t.x1, t.y0}));
-      frame.verts.push_back(Vert({px1, py1, 0.0f}, {rx1, ry1, 0.0f}, normal, tangent, {t.x1, t.y1}));
-      frame.verts.push_back(Vert({px0, py1, 0.0f}, {rx0, ry1, 0.0f}, normal, tangent, {t.x0, t.y1}));
+      frame.verts.push_back(Vert({px0, py0, 0.0f}, {rx0, ry0, 0.0f}, tbnq, {t.x0, t.y0}));
+      frame.verts.push_back(Vert({px1, py0, 0.0f}, {rx1, ry0, 0.0f}, tbnq, {t.x1, t.y0}));
+      frame.verts.push_back(Vert({px1, py1, 0.0f}, {rx1, ry1, 0.0f}, tbnq, {t.x1, t.y1}));
+      frame.verts.push_back(Vert({px0, py1, 0.0f}, {rx0, ry1, 0.0f}, tbnq, {t.x0, t.y1}));
     };
 
     float px0 = 0.0f;
@@ -403,14 +402,13 @@ struct ThemeDrawHelper::Private
     frame.indexes.clear();
     frame.updateVertexBuffer = true;
 
-    glm::vec3 normal = {0.0f, 0.0f, 1.0f};
-    glm::vec3 tangent = {1.0f, 0.0f, 0.0f};
+    glm::fquat tbnq = {0.0f, 0.0f, 0.0f, 1.0f};
 
     frame.verts.resize(4);
-    frame.verts[0] = Vert({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, normal, tangent, {t.x0, t.y0});
-    frame.verts[1] = Vert({0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, normal, tangent, {t.x1, t.y0});
-    frame.verts[2] = Vert({0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f}, normal, tangent, {t.x1, t.y1});
-    frame.verts[3] = Vert({0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, normal, tangent, {t.x0, t.y1});
+    frame.verts[0] = Vert({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, tbnq, {t.x0, t.y0});
+    frame.verts[1] = Vert({0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, tbnq, {t.x1, t.y0});
+    frame.verts[2] = Vert({0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f}, tbnq, {t.x1, t.y1});
+    frame.verts[3] = Vert({0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, tbnq, {t.x0, t.y1});
 
     frame.indexes = {3,2,0,2,1,0};
   }

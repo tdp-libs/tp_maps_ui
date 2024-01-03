@@ -113,11 +113,11 @@ void Image::render(tp_maps::RenderInfo& renderInfo)
 
           std::vector<tp_maps::G3DImageShader::Vertex> verts;
 
-          //                                              vertex      normal   tangent  texture
-          verts.push_back(tp_maps::G3DImageShader::Vertex({w,y,0.5f}, {0,0,1}, {1,0,0}, { t.x, 0.0f}));
-          verts.push_back(tp_maps::G3DImageShader::Vertex({w,h,0.5f}, {0,0,1}, {1,0,0}, { t.x,  t.y}));
-          verts.push_back(tp_maps::G3DImageShader::Vertex({x,h,0.5f}, {0,0,1}, {1,0,0}, {0.0f,  t.y}));
-          verts.push_back(tp_maps::G3DImageShader::Vertex({x,y,0.5f}, {0,0,1}, {1,0,0}, {0.0f, 0.0f}));
+          //                                              vertex        tbnq       texture
+          verts.push_back(tp_maps::G3DImageShader::Vertex({w,y,0.5f}, {0,0,0,1}, { t.x, 0.0f}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({w,h,0.5f}, {0,0,0,1}, { t.x,  t.y}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({x,h,0.5f}, {0,0,0,1}, {0.0f,  t.y}));
+          verts.push_back(tp_maps::G3DImageShader::Vertex({x,y,0.5f}, {0,0,0,1}, {0.0f, 0.0f}));
           std::vector<GLuint> indexes{3,2,1,0};
 
           delete d->imageVertexBuffer;
