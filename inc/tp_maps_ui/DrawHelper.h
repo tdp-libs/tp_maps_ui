@@ -63,8 +63,9 @@ struct BoxParams
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT DrawHelper
 {
-  TP_NONCOPYABLE(DrawHelper);
   friend class UILayer;
+  TP_NONCOPYABLE(DrawHelper);
+  TP_DQ;
 public:
   //################################################################################################
   DrawHelper(UILayer* layer);
@@ -117,11 +118,6 @@ protected:
 
   //################################################################################################
   void setRecommendedSize(FillType fillType, const glm::vec2& recommendedSize);
-
-private:
-  struct Private;
-  friend struct Private;
-  Private* d;
 };
 }
 #endif

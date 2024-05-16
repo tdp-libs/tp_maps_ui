@@ -10,6 +10,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT CheckBox : public Widget
 {
+  TP_DQ;
 public:
   //################################################################################################
   CheckBox(Widget* parent=nullptr);
@@ -62,11 +63,6 @@ protected:
 
   //################################################################################################
   void animate(double timestampMS) override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

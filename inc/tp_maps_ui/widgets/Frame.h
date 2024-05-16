@@ -9,6 +9,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT Frame : public Widget
 {
+  TP_DQ;
 public:
   //################################################################################################
   Frame(Widget* parent=nullptr);
@@ -22,11 +23,6 @@ protected:
 
   //################################################################################################
   void invalidateBuffers() override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

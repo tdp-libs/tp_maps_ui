@@ -9,6 +9,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT FixedLayout : public Layout
 {
+  TP_DQ;
 public:
   //################################################################################################
   FixedLayout(Widget* parent=nullptr);
@@ -39,11 +40,6 @@ public:
                                                    tp_maps_ui::Dim targetHeight,
                                                    float speedR,
                                                    float speedP);
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 
 }

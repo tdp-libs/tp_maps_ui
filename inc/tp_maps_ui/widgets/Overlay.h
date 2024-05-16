@@ -10,6 +10,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT Overlay : public Widget
 {
+  TP_DQ;
 public:
   //################################################################################################
   Overlay(Widget* parent=nullptr);
@@ -41,11 +42,6 @@ protected:
 
   //################################################################################################
   void animate(double timestampMS) override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

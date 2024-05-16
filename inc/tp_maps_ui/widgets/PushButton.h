@@ -17,6 +17,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT PushButton : public Widget
 {
+  TP_DQ;
 public:
   //################################################################################################
   PushButton(Widget* parent=nullptr);
@@ -63,11 +64,6 @@ protected:
 
   //################################################################################################
   void setCurrentVisualModifier(VisualModifier currentVisualModifier);
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

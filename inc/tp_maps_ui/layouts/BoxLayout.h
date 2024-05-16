@@ -9,6 +9,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT BoxLayout : public Layout
 {
+  TP_DQ;
 public:
   //################################################################################################
   BoxLayout(Orientation orientation, Widget* parent=nullptr);
@@ -33,11 +34,6 @@ public:
 
   //################################################################################################
   std::pair<Dim, Dim> sizeHint() const override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 
 //##################################################################################################

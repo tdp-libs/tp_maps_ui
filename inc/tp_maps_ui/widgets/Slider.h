@@ -10,6 +10,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT Slider : public Widget
 {
+  TP_DQ;
 public:
   //################################################################################################
   Slider(Widget* parent=nullptr);
@@ -50,11 +51,6 @@ protected:
 
   //################################################################################################
   void animate(double timestampMS) override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

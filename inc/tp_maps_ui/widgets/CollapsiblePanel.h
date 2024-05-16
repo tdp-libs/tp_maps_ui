@@ -9,6 +9,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT CollapsiblePanel : public Widget
 {
+  TP_DQ;
 public:
   //################################################################################################
   CollapsiblePanel(Widget* parent=nullptr);
@@ -21,11 +22,6 @@ public:
 
   //################################################################################################
   void setGeometry(float x, float y, float w, float h) override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

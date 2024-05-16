@@ -9,6 +9,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT FPSLabel : public Label
 {
+  TP_DQ;
 public:
   //################################################################################################
   FPSLabel(Widget* parent=nullptr);
@@ -19,11 +20,6 @@ public:
 protected:
   //################################################################################################
   void render(tp_maps::RenderInfo& renderInfo) override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

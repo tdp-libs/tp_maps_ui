@@ -2,7 +2,6 @@
 #define tp_maps_ui_Label_h
 
 #include "tp_maps_ui/Widget.h"
-#include "tp_utils/CallbackCollection.h"
 
 namespace tp_maps_ui
 {
@@ -10,6 +9,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT Label : public Widget
 {
+  TP_DQ;
 public:
   //################################################################################################
   Label(Widget* parent=nullptr);
@@ -50,11 +50,6 @@ protected:
 
   //################################################################################################
   void animate(double timestampMS) override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

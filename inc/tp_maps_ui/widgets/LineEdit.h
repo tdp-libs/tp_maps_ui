@@ -9,6 +9,7 @@ namespace tp_maps_ui
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT LineEdit : public Widget
 {
+  TP_DQ;
 public:
   //################################################################################################
   LineEdit(Widget* parent=nullptr);
@@ -49,11 +50,6 @@ protected:
 
   //################################################################################################
   void animate(double timestampMS) override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

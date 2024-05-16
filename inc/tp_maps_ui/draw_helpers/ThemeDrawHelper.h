@@ -72,6 +72,7 @@ struct ThemeParameters
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT ThemeDrawHelper : public DrawHelper
 {
+  TP_DQ;
 public:
   //################################################################################################
   ThemeDrawHelper(UILayer* layer, const ThemeParameters& themeParameters);
@@ -97,11 +98,6 @@ public:
 protected:
   //################################################################################################
   void invalidateBuffers() override;
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

@@ -10,8 +10,9 @@ class Widget;
 //##################################################################################################
 class TP_MAPS_UI_SHARED_EXPORT Layout
 {
-  TP_NONCOPYABLE(Layout);
   friend class Widget;
+  TP_NONCOPYABLE(Layout);
+  TP_DQ;
 public:
   //################################################################################################
   Layout(Widget* parent=nullptr);
@@ -41,11 +42,6 @@ private:
 protected:
   //################################################################################################
   void addChildWidget(Widget* child);
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif

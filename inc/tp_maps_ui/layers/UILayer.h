@@ -20,6 +20,7 @@ class TP_MAPS_UI_SHARED_EXPORT UILayer : public tp_maps::Layer
 {
   friend class Widget;
   friend class DrawHelper;
+  TP_DQ;
 public:
   //################################################################################################
   UILayer(size_t fromStage);
@@ -103,11 +104,6 @@ private:
 
   //################################################################################################
   void removeDrawHelper(DrawHelper* drawHelper);
-
-private:
-  struct Private;
-  Private* d;
-  friend struct Private;
 };
 }
 #endif
