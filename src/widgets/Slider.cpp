@@ -161,6 +161,7 @@ bool Slider::mouseEvent(const tp_maps::MouseEvent& event)
         d->value = v;
         valueChanged();
       }
+
       update();
       return true;
     }
@@ -172,7 +173,7 @@ bool Slider::mouseEvent(const tp_maps::MouseEvent& event)
     if(d->currentVisualModifier == VisualModifier::Pressed)
     {
       d->currentVisualModifier = VisualModifier::Normal;
-      //clicked();
+
       update();
       return true;
     }

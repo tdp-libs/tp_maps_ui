@@ -1,7 +1,7 @@
 #ifndef tp_maps_ui_Globals_h
 #define tp_maps_ui_Globals_h
 
-#include "tp_utils/StringID.h"
+#include "tp_utils/StringID.h" // IWYU pragma: keep
 
 #if defined(TP_MAPS_UI_LIBRARY)
 #  define TP_MAPS_UI_SHARED_EXPORT TP_EXPORT

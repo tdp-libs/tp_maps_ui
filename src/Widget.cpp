@@ -8,7 +8,6 @@
 
 #include "tp_utils/TimeUtils.h"
 
-#include "glm/glm.hpp"
 #include "glm/ext/matrix_transform.hpp"
 
 namespace tp_maps_ui
@@ -197,6 +196,7 @@ void Widget::addWidget(Widget* child, int index)
     d->children.push_back(child);
   else
     d->children.insert(d->children.begin()+tpBound(0, index, int(d->children.size())), child);
+
   d->updateLayout();
 }
 
@@ -236,10 +236,14 @@ void Widget::setGeometry(float x, float y, float w, float h)
 {
   TP_FUNCTION_TIME("Widget::setGeometry");
 
+  if(d->x == x && d->y == y && d->width == w && d->height == h)
+    return;
+
   d->x = x;
   d->y = y;
   d->width  = w;
   d->height = h;
+
   d->updateLayout();
 }
 

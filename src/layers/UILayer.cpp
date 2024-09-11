@@ -205,6 +205,9 @@ void UILayer::stopTextInput(Widget* widget)
 //##################################################################################################
 void UILayer::update()
 {
+  if(!visible())
+    return;
+
   if(d->fromStage==0)
     tp_maps::Layer::update();
   else
