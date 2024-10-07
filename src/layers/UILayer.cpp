@@ -105,6 +105,7 @@ void UILayer::render(tp_maps::RenderInfo& renderInfo)
     d->height = map()->height();
 
     d->rootWidget->setGeometry(0.0f, 0.0f, float(d->width), float(d->height));
+    d->rootWidget->rootWidgetResized();
   }
 
   d->rootWidget->renderInternal(renderInfo);

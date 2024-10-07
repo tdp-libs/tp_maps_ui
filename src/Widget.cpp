@@ -12,6 +12,7 @@
 
 namespace tp_maps_ui
 {
+
 //##################################################################################################
 struct Widget::Private
 {
@@ -74,8 +75,6 @@ struct Widget::Private
     if(calculateGeometry)
     {
       calculateGeometry = false;
-      if(layout)
-        layout->updateLayout();
 
       if(parent)
       {
@@ -134,6 +133,12 @@ struct Widget::Private
         if(projScissorH>projParentScissorH)
           scissorH = tpMax(0, scissorH-(projScissorH-projParentScissorH));
       }
+
+      if(layout)
+        layout->updateLayout();
+      else
+        for(auto child : children)
+          child->d->calculateGeometry = true;
     }
   }
 };
@@ -648,6 +653,14 @@ void Widget::setLayer(UILayer* layer)
   d->layer = layer;
   for(auto child : d->children)
     child->setLayer(layer);
+}
+
+//##################################################################################################
+void Widget::rootWidgetResized()
+{
+  d->calculateGeometry = true;
+  for(auto child : d->children)
+    child->rootWidgetResized();
 }
 
 //##################################################################################################
