@@ -116,13 +116,13 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
   auto m = matrix();
 
   //Draw the button background.
-  if(d->drawBackground and drawHelper())
+  if(d->drawBackground && drawHelper())
   {
     drawHelper()->drawBox(m, width(), height(), BoxType::Raised, FillType::Button, d->currentVisualModifier);
   }
 
   //Draw the text.
-  if(font() and !d->text.empty())
+  if(font() && !d->text.empty())
   {
     auto shader = layer()->map()->getShader<tp_maps::FontShader>();
     if(shader->error())
@@ -184,7 +184,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
       }
     }
 
-    if(d->normalImageTextureID>0 or d->pressedImageTextureID>0)
+    if(d->normalImageTextureID>0 || d->pressedImageTextureID>0)
     {
       tp_maps::G3DImageShader* shader = layer()->map()->getShader<tp_maps::G3DImageShader>();
       if(shader->error())
@@ -237,7 +237,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
 
       if(d->currentVisualModifier == VisualModifier::Pressed)
       {
-        if(d->pressedImageTextureID>0 and d->pressedImageVertexBuffer)
+        if(d->pressedImageTextureID>0 && d->pressedImageVertexBuffer)
         {
           shader->setTexture(d->pressedImageTextureID);
           shader->draw(GL_TRIANGLE_FAN, d->pressedImageVertexBuffer.get(), {1.0f, 1.0f, 1.0f, 1.0f});
@@ -245,7 +245,7 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
       }
       else
       {
-        if(d->normalImageTextureID>0 and d->normalImageVertexBuffer)
+        if(d->normalImageTextureID>0 && d->normalImageVertexBuffer)
         {
           shader->setTexture(d->normalImageTextureID);
           shader->draw(GL_TRIANGLE_FAN, d->normalImageVertexBuffer.get(), {1.0f, 1.0f, 1.0f,1.0f});
