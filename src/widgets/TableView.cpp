@@ -22,7 +22,7 @@ struct TableView::Private
   TP_REF_COUNT_OBJECTS("tp_maps_ui::TableView::Private");
   TP_NONCOPYABLE(Private);
 
-  TableView* q;
+  Q* q;
 
   std::function<size_t()> numberOfRows;
   std::function<Widget*(size_t, Widget*)> widgetForRow;
@@ -43,7 +43,7 @@ struct TableView::Private
 
 
   //################################################################################################
-  Private(TableView* q_, Orientation orientation_):
+  Private(Q* q_, Orientation orientation_):
     q(q_),
     orientation(orientation_)
   {

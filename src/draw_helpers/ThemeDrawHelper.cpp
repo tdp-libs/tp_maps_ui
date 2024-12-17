@@ -139,7 +139,7 @@ struct ThemeDrawHelper::Private
   TP_REF_COUNT_OBJECTS("tp_maps_ui::ThemeDrawHelper::Private");
   TP_NONCOPYABLE(Private);
 
-  ThemeDrawHelper* q;
+  Q* q;
 
   ThemeParameters themeParameters;
 
@@ -163,7 +163,7 @@ struct ThemeDrawHelper::Private
   bool bindBeforeRender{true};
 
   //################################################################################################
-  Private(ThemeDrawHelper* q_, const ThemeParameters& themeParameters_):
+  Private(Q* q_, const ThemeParameters& themeParameters_):
     q(q_),
     themeParameters(themeParameters_)
   {

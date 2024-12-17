@@ -31,14 +31,14 @@ struct CollapsiblePanel::Private
   TP_REF_COUNT_OBJECTS("tp_maps_ui::CollapsiblePanel::Private");
   TP_NONCOPYABLE(Private);
 
-  CollapsiblePanel* q;
+  Q* q;
   std::vector<PageDetails_lt*> pages;
   FixedLayout* layout{nullptr};
 
   double lastAnimationMS{0.0};
 
   //################################################################################################
-  Private(CollapsiblePanel* q_):
+  Private(Q* q_):
     q(q_)
   {
 
