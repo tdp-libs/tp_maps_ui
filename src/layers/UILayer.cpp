@@ -17,7 +17,7 @@ struct UILayer::Private
   TP_REF_COUNT_OBJECTS("tp_maps_ui::UILayer::Private");
   TP_NONCOPYABLE(Private);
 
-  size_t fromStage;
+  tp_utils::StringID refreshFromStage;
 
   Widget* rootWidget{nullptr};
   tp_maps::FontRenderer* font{nullptr};
@@ -28,8 +28,8 @@ struct UILayer::Private
   int height{0};
 
   //################################################################################################
-  Private(size_t fromStage_):
-    fromStage(fromStage_)
+  Private(const tp_utils::StringID& refreshFromStage_):
+    refreshFromStage(refreshFromStage_)
   {
 
   }
@@ -43,8 +43,8 @@ struct UILayer::Private
 };
 
 //##################################################################################################
-UILayer::UILayer(size_t fromStage):
-  d(new Private(fromStage))
+UILayer::UILayer(const tp_utils::StringID& refreshFromStage):
+  d(new Private(refreshFromStage))
 {
   d->rootWidget = new Widget();
   d->rootWidget->setLayer(this);
@@ -209,10 +209,10 @@ void UILayer::update()
   if(!visible())
     return;
 
-  if(d->fromStage==0)
-    tp_maps::Layer::update();
+  if(d->refreshFromStage.isValid())
+    tp_maps::Layer::update(d->refreshFromStage);
   else
-    tp_maps::Layer::update({tp_maps::RenderFromStage::Stage, d->fromStage});
+    tp_maps::Layer::update();
 }
 
 //##################################################################################################

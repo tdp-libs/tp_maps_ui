@@ -23,7 +23,7 @@ class TP_MAPS_UI_SHARED_EXPORT UILayer : public tp_maps::Layer
   TP_DQ;
 public:
   //################################################################################################
-  UILayer(size_t fromStage);
+  UILayer(const tp_utils::StringID& refreshFromStage);
 
   //################################################################################################
   ~UILayer() override;
