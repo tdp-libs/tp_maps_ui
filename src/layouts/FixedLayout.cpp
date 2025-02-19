@@ -124,7 +124,8 @@ std::function<bool(double)> FixedLayout::makeAnimationFunctor(tp_maps_ui::Widget
                                                               float speedR,
                                                               float speedP)
 {
-  return [=, lastTimeMS=-1.0](double timeMS) mutable -> bool
+  return [this, speedR, speedP, widget, targetX, targetY,
+      targetWidth, targetHeight, lastTimeMS=-1.0](double timeMS) mutable -> bool
   {
     auto delta = timeMS-lastTimeMS;
     if(lastTimeMS<0.0)
