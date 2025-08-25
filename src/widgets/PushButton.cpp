@@ -111,8 +111,6 @@ void PushButton::render(tp_maps::RenderInfo& renderInfo)
 {
   TP_FUNCTION_TIME("PushButton::render");
 
-  TP_UNUSED(renderInfo);
-
   auto m = matrix();
 
   //Draw the button background.
